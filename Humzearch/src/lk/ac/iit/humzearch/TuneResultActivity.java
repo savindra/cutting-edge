@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -160,6 +161,8 @@ public class TuneResultActivity extends ActionBarActivity {
 			
 		}
 	};
+	
+	
 	
 
 }

@@ -13,6 +13,7 @@
     <string name="firstandlast">First and Last Name</string>
     <string name="passwordhint">At least 6 characters</string>
     <string name="confirmpass">Confirm Password</string>
+    <string name="logout">Logout</string>
     
     <!-- Nav Drawer Menu Items -->
     <string-array name="main_menu_items">

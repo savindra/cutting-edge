@@ -2,6 +2,8 @@ package lk.ac.iit.humzearch;
 
 import java.util.ArrayList;
 
+import com.parse.ParseUser;
+
 import lk.ac.iit.humzearch.adapter.NavDrawerListAdapter;
 import lk.ac.iit.humzearch.fragment.RecordTuneFragment;
 import lk.ac.iit.humzearch.fragment.ViewTuneFragment;
@@ -9,6 +11,8 @@ import lk.ac.iit.humzearch.model.NavDrawerItem;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -18,6 +22,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -166,6 +171,8 @@ public class MainMenuActivity extends ActionBarActivity {
 		switch(item.getItemId()){
 		case R.id.action_settings:
 			return true;
+		case R.id.action_logout:
+			logout();
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -198,6 +205,31 @@ public class MainMenuActivity extends ActionBarActivity {
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+	
+	private void logout(){
+		AlertDialog alertDialog = new AlertDialog.Builder(MainMenuActivity.this).create();
+		alertDialog.setTitle("Alert");
+		alertDialog.setMessage("Are you sure you want to logout?");
+		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				ParseUser.logOut();
+				Intent intent = new Intent(MainMenuActivity.this, LoginSignupActivity.class);
+				startActivity(intent);
+				
+			}
+		});
+		alertDialog.show();
+	}
 	
 	
 }

@@ -47,7 +47,7 @@ public class TabLogin extends Fragment {
 					result = "Please enter email and password";
 					displayResult(result);
 				}else {
-					progressDialog = ProgressDialog.show(getActivity(), "Login", "Please Wait...Login in Progress..", true);
+					progressDialog = ProgressDialog.show(getActivity(), "", "Please Wait...Login in Progress..", true);
 					login();
 					
 				}
