@@ -1,0 +1,193 @@
+package lk.ac.iit.humzearch.fragment;
+
+import java.io.File;
+import java.io.IOException;
+
+import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.util.ScreenUtils;
+import lk.ac.iit.humzearch.util.VoiceView;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
+import android.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordListener {
+	
+	private static final String TAG = RecordTuneFragment.class.getName();
+	
+	private VoiceView mVoiceView;
+    private MediaRecorder mMediaRecorder;
+    private MediaPlayer mMediaPlayer;
+    private Handler mHandler;
+    private Handler timerHandler;
+    private TextView txtTimer;
+    
+    private long startTime = 0L;
+    private long timeInMilliseconds = 0L;
+    private long timeSwapBuff = 0L;
+    private long updatedTime = 0L;
+    
+    private String outputFile = null;
+    
+    private Button btnPlay,btnStop;
+    private SeekBar seekBar;
+    
+    private boolean mIsRecording = false;
+	
+	public RecordTuneFragment(){}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.record_tune, container, false);
+		
+		mVoiceView = (VoiceView) rootView.findViewById(R.id.voiceview);
+		txtTimer = (TextView) rootView.findViewById(R.id.txtRecordTuneTimer);
+		btnPlay = (Button) rootView.findViewById(R.id.btnRecordTunePlay);
+		btnStop = (Button) rootView.findViewById(R.id.btnRecordTuneStop);
+		seekBar = (SeekBar) rootView.findViewById(R.id.recordTuneSeekBar);
+		
+		btnPlay.setEnabled(false);
+		btnStop.setEnabled(false);
+		
+		btnPlay.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				play();
+				
+			}
+		});
+		
+		seekBar.setMax((int) startTime);
+		seekBar.setClickable(false);
+		
+		mHandler = new Handler(Looper.getMainLooper());
+		timerHandler = new Handler();
+		
+		mVoiceView.setOnRecordListener(this);
+		
+		return rootView;
+	}
+	
+	public void play(){
+		Toast.makeText(getActivity(), "Play", Toast.LENGTH_LONG).show();
+	}
+	
+
+	@Override
+	public void onRecordStart() {
+		Log.d(TAG, "onRecordStart");
+        try {
+        	outputFile = getOutputMediaFileUri();
+        	startTime = SystemClock.uptimeMillis();
+            mMediaRecorder = new MediaRecorder();
+            mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+            mMediaRecorder.setOutputFile(outputFile);
+            mMediaRecorder.prepare();
+            mMediaRecorder.start();
+            mIsRecording = true;
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mIsRecording) {
+                    	float radius = (float) Math.log10(Math.max(1, mMediaRecorder.getMaxAmplitude() - 500)) * ScreenUtils.dp2px(getActivity(), 35);
+                        mVoiceView.animateRadius(radius);
+                        
+                        timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+						updatedTime = timeSwapBuff + timeInMilliseconds;
+						
+						int secs = (int) (updatedTime /1000);
+						
+						if(secs <= 20){
+							txtTimer.setText("00:" + String.format("%02d", secs));
+						}else{
+							secs = 0;
+							onRecordFinish();
+						}
+                        
+                        mHandler.postDelayed(this, 50);
+                        
+                        
+                    }
+                }
+            });
+            
+            
+        } catch (IOException e) {
+            Toast.makeText(getActivity(), "MediaRecorder prepare failed!", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+		
+	}
+
+	@Override
+	public void onRecordFinish() {
+		Log.d(TAG, "onRecordFinish");
+		if(mIsRecording == true){
+			mIsRecording = false;
+			mMediaRecorder.stop();
+			mMediaRecorder.release();
+			mMediaRecorder = null;
+		}
+		
+	}
+	
+	@Override
+	public void onDestroy() {
+        if(mIsRecording){
+            onRecordFinish();
+        }
+
+        super.onDestroy();
+    }
+	
+	
+	public String getOutputMediaFileUri() {
+        return (getOutputMediaFile()).getAbsolutePath();
+    }
+	
+	private static File getOutputMediaFile(){
+		File mediaStorageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), "/humzearch");
+		
+		// Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d(TAG, "Oops! Failed create "
+                        + "humzearch" + " directory");
+                return null;
+            }
+        }
+        
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir + File.separator + "audio.mp3");
+        try {
+			mediaFile.createNewFile();
+			Log.d(TAG, "file created.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+        return mediaFile;
+	}
+	
+
+	
+}

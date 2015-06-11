@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    android:layout_height="wrap_content"
+    android:id="@+id/recordTune_tool_bar"
+    android:layout_width="match_parent"
+    android:background="#ccc"
+    android:elevation="2dp"
+    android:theme="@style/Base.ThemeOverlay.AppCompat.Light"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<ImageButton
+    android:layout_width="60dp"
+    android:layout_height="80dp"
+    android:layout_weight="1"
+    android:layout_gravity="center"
+    android:background="@drawable/ic_search"
+    android:contentDescription="@string/email" />
+
+<ImageButton
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_weight="1"
+    android:layout_gravity="center"
+    android:background="@drawable/ic_search"
+    android:contentDescription="@string/email" />
+
+</android.support.v7.widget.Toolbar>

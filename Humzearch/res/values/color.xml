@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorPrimary">#e62117</color>
+    <color name="ColorPrimaryDark">#c31c13</color>
+    <color name="tabsScrollColor">#8a140e</color>
+    <color name="fontblack">#000</color>
+    
+    <!-- Main menu colors -->
+    <color name="list_item_title">#303030</color>
+    <color name="list_background">#eee</color>
+    <color name="list_background_pressed">#aaa</color>
+    <color name="list_divider">#ccc</color>
+    <color name="counter_text_bg">#626262</color>
+    <color name="counter_text_color">#c5c4c4</color>
+    
+    <color name="button">#ccc</color>
+    
+</resources>

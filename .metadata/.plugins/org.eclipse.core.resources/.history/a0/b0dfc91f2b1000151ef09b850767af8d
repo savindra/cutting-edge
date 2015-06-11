@@ -1,0 +1,66 @@
+package lk.ac.iit.humzearch;
+
+import lk.ac.iit.humzearch.app.AppController;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
+import android.app.Dialog;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.TextView;
+
+public class TuneResultActivity extends ActionBarActivity {
+	
+	private TextView txtTitle, txtArtist, txtAlbum, txtCountry;
+	private NetworkImageView imgArtwork;
+	private final String DEFAULT_ARTWORK = "http://i.imgur.com/ST7k1qw.jpg";
+	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	private Dialog previewDialog;
+	private MediaPlayer mMediaplayer;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.record_tune_result);
+		
+		txtTitle = (TextView) findViewById(R.id.txtTuneResultName);
+		txtArtist = (TextView) findViewById(R.id.txtTuneResultArtist);
+		txtAlbum = (TextView) findViewById(R.id.txtTuneResultAlbum);
+		txtCountry = (TextView) findViewById(R.id.txtTuneResultCountry);
+		imgArtwork = (NetworkImageView) findViewById(R.id.imgTuneResultCover);
+		previewDialog = new Dialog(this);
+		
+		filData();
+		initializePreviewDialog();
+	}
+
+	public void filData(){
+		Bundle extras = getIntent().getExtras();
+		if( extras != null ){
+			
+			String imgUrl = extras.getString("tune_img");
+			if(imgUrl.equals("")){
+				imgArtwork.setImageUrl(DEFAULT_ARTWORK, imageLoader);
+			}else {
+				imgArtwork.setImageUrl(extras.getString("tune_img"), imageLoader);
+			}
+			
+			txtTitle.setText(extras.getString("tune_title"));
+			txtArtist.setText(extras.getString("tune_artist"));
+			txtAlbum.setText(extras.getString("tune_album"));
+			txtCountry.setText(extras.getString("tune_country"));
+			
+		}
+		
+	}
+	
+	private void initializePreviewDialog() {
+		previewDialog.setContentView(R.layout.record_tune_result_play);
+		
+		
+	}
+	
+
+}

@@ -1,0 +1,165 @@
+package lk.ac.iit.humzearch;
+
+import lk.ac.iit.humzearch.app.AppController;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.PersistableBundle;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class TuneResultActivity extends ActionBarActivity {
+	
+	private final String TAG = TuneResultActivity.class.getSimpleName();
+	
+	private TextView txtTitle, txtArtist, txtAlbum, txtCountry, txtPlayPreview;
+	private NetworkImageView imgArtwork;
+	private final String DEFAULT_ARTWORK = "http://i.imgur.com/ST7k1qw.jpg";
+	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+	private Dialog previewDialog;
+	
+	private MediaPlayer mMediaplayer;
+	private Button btnPlay,btnStop;
+	private SeekBar seekBar;
+	private TextView txtTimer;
+	private double timeElapsed = 0;
+	
+	private Handler timerHandler;
+	private boolean isPlaying = false;;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.record_tune_result);
+		
+		txtTitle = (TextView) findViewById(R.id.txtTuneResultName);
+		txtArtist = (TextView) findViewById(R.id.txtTuneResultArtist);
+		txtAlbum = (TextView) findViewById(R.id.txtTuneResultAlbum);
+		txtCountry = (TextView) findViewById(R.id.txtTuneResultCountry);
+		imgArtwork = (NetworkImageView) findViewById(R.id.imgTuneResultCover);
+		txtPlayPreview = (TextView) findViewById(R.id.txtRecordTuneResultPlayPreview);
+		
+		filData();
+	}
+
+	public void filData(){
+		Bundle extras = getIntent().getExtras();
+		if( extras != null ){
+			
+			String imgUrl = extras.getString("tune_img");
+			if(imgUrl.equals("")){
+				imgArtwork.setImageUrl(DEFAULT_ARTWORK, imageLoader);
+			}else {
+				imgArtwork.setImageUrl(extras.getString("tune_img"), imageLoader);
+			}
+			
+			txtTitle.setText(extras.getString("tune_title"));
+			txtArtist.setText(extras.getString("tune_artist"));
+			txtAlbum.setText(extras.getString("tune_album"));
+			txtCountry.setText(extras.getString("tune_country"));
+			
+			final String url = extras.getString("tune_url");
+			txtPlayPreview.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(url.equals("")){
+						Toast.makeText(TuneResultActivity.this, "Preview not available.", Toast.LENGTH_LONG).show();
+					}else{
+						initializePreviewDialog(url);
+					}
+					
+				}
+			});
+			
+		}
+		
+	}
+	
+	private void initializePreviewDialog(String url) {
+		timerHandler = new Handler();
+		previewDialog = new Dialog(this);
+		previewDialog.setContentView(R.layout.record_tune_result_play);
+		previewDialog.setTitle("Preview");
+		
+		txtTimer = (TextView) previewDialog.findViewById(R.id.txtRecordTuneResultTimer);
+		seekBar = (SeekBar) previewDialog.findViewById(R.id.recordTuneResultSeekBar);
+		btnPlay = (Button) previewDialog.findViewById(R.id.btnRecordTuneResultPlay);
+		btnStop = (Button) previewDialog.findViewById(R.id.btnRecordTuneResultStop);
+		
+		Uri previewUri = Uri.parse(url);
+		try{
+			mMediaplayer = new MediaPlayer();
+			mMediaplayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			mMediaplayer = MediaPlayer.create(previewDialog.getContext(), previewUri);
+		}catch(Exception e){
+			Log.d(TAG, e.toString());
+		}
+		
+		previewDialog.show();
+		
+		btnPlay.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				isPlaying = true;
+				seekBar.setMax((int) mMediaplayer.getDuration());
+				mMediaplayer.start();
+				timeElapsed = mMediaplayer.getCurrentPosition();
+				seekBar.setProgress((int) timeElapsed);
+				timerHandler.postDelayed(updateSeekBarTime, 100);
+			}
+		});
+		
+		btnStop.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				isPlaying = false;
+				mMediaplayer.stop();
+				seekBar.setProgress(0);
+				txtTimer.setText("00:00");
+				
+			}
+		});
+		
+		previewDialog.setOnDismissListener(new OnDismissListener() {
+			
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				mMediaplayer.stop();
+			}
+		});
+		
+	}
+	
+	private Runnable updateSeekBarTime = new Runnable() {
+		
+		@Override
+		public void run() {
+			
+			timeElapsed = mMediaplayer.getCurrentPosition();
+			seekBar.setProgress((int) timeElapsed);
+			int timeRemaining = (int) (timeElapsed / 1000) + 1;
+			txtTimer.setText("00:" + String.format("%02d",timeRemaining));
+			timerHandler.postDelayed(this, 100);
+		}
+	};
+	
+
+}

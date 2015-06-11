@@ -1,0 +1,19 @@
+package lk.ac.iit.humzearch;
+
+import lk.ac.iit.humzearch.adapter.ViewPagerAdapter;
+import lk.ac.iit.humzearch.util.SlidingTabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+
+Toolbar toolbar;
+ViewPager pager;
+ViewPagerAdapter adapter;
+SlidingTabLayout tabs;
+CharSequence titles[]={"Login","Sign Up"};
+int Numboftabs =2;
+
+public class LoginSignupActivity {
+	
+	
+
+}

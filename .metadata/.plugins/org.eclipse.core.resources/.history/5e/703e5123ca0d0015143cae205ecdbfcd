@@ -1,0 +1,25 @@
+package lk.ac.iit.humzearch.model;
+
+import android.content.Context;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
+import android.view.View;
+
+public class SoundLevelView extends View {
+	
+	private Drawable mGreen;
+	private Drawable mRed;
+	private Paint mBackgroundPaint;
+	
+	private int mHeight;
+	private int mWidth;
+	
+	
+
+	public SoundLevelView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		// TODO Auto-generated constructor stub
+	}
+
+}

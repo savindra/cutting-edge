@@ -1,0 +1,7 @@
+package lk.ac.iit.humzearch.util;
+
+import android.view.View;
+
+public class VoiceView extends View {
+
+}

@@ -1,0 +1,7 @@
+package lk.ac.iit.humzearch.model;
+
+public class SoundMeter {
+	
+	static final private double EMA_FILTER  = 0.6;
+
+}

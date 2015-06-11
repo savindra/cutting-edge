@@ -1,0 +1,16 @@
+package lk.ac.iit.humzearch.model;
+
+import java.util.Date;
+
+public class Tune {
+	
+	private String tuneID;
+	private String title = "";
+	private String artist = "";
+	private String album = "";
+	private String country = "";
+	private String img = "";
+	private String url = "";
+	private Date date_added;
+
+}

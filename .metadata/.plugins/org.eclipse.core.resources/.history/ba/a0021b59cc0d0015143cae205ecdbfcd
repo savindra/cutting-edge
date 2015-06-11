@@ -1,0 +1,10 @@
+package lk.ac.iit.humzearch.model;
+
+public class SoundMeter {
+	
+	static final private double EMA_FILTER  = 0.6;
+	
+	private MediaRecorder mRecorder = null;
+    private double mEMA = 0.0;
+
+}
