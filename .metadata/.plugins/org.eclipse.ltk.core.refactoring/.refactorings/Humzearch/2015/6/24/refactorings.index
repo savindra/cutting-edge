@@ -24,3 +24,8 @@
 1433936969385	Extracts string 'null' into R.string.sharewithcommunity
 1433939006505	Move compilation unit
 1434021786328	Rename field 'textView5'
+1434047956812	Extracts string 'null' into R.string.artist
+1434047977910	Extracts string 'null' into R.string.language
+1434047994772	Extracts string 'null' into R.string.country
+1434048011360	Extracts string 'null' into R.string.year
+1434048028561	Extracts string 'null' into R.string.share

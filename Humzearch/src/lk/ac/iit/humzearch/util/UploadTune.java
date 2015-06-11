@@ -2,8 +2,10 @@ package lk.ac.iit.humzearch.util;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream.PutField;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,9 +24,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import lk.ac.iit.humzearch.R;
 import lk.ac.iit.humzearch.TuneResultActivity;
 import lk.ac.iit.humzearch.model.Tune;
 import lk.ac.iit.humzearch.util.AndroidMultiPartEntity.ProgressListener;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -35,6 +45,11 @@ import android.preference.PreferenceManager;
 import android.sax.StartElementListener;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class UploadTune extends AsyncTask<Void, Integer, String> {
@@ -55,10 +70,15 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 	
 	private AlertDialog alertDialog;
 	
+	private Dialog dialog;
+	private TextView txtArtist, txtYear;
+	private Spinner language, country;
+	private Button btnShare;
+	
 	public UploadTune(Context context, String tuneFile) {
 		super();
 		this.context = context;
-		this.tuneFile = "/storage/emulated/0/Download/test.mp3";
+		this.tuneFile = tuneFile;
 		tune = new Tune();
 	}
 
@@ -205,9 +225,98 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 					
 				}
 			});
+			alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Share with Community", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					ShareToCommunity();
+					alertDialog.dismiss();
+				}
+			});
 			alertDialog.show();
 		}
 		super.onPostExecute(result);
+	}
+	
+	public void ShareToCommunity(){
+		
+		dialog = new Dialog(context);
+		dialog.setContentView(R.layout.record_tune_share_dialog);
+		dialog.setTitle("Share with Community");
+		
+		txtArtist = (TextView) dialog.findViewById(R.id.txtRecordTuneShareArtist);
+		language = (Spinner) dialog.findViewById(R.id.spinnerRecordTuneShareLang);
+		country = (Spinner) dialog.findViewById(R.id.spinnerRecordTuneShareCountry);
+		txtYear = (TextView) dialog.findViewById(R.id.txtRecordTuneShareYear);
+		btnShare = (Button) dialog.findViewById(R.id.btnRecordTuneShareDialog);
+		
+		dialog.show();
+		
+		btnShare.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				uploadTune();
+				dialog.dismiss();
+			}
+		});
+	}
+	
+	public void saveTuneObj(ParseFile tuneFile){
+		ParseObject pTune = new ParseObject("Tune");
+		pTune.put("createdBy", ParseUser.getCurrentUser());
+		pTune.put("artist", txtArtist.getText().toString());
+		pTune.put("language", String.valueOf(language.getSelectedItem()));
+		pTune.put("country", String.valueOf(country.getSelectedItem()));
+		pTune.put("year", txtYear.getText().toString());
+		pTune.put("status", "pending");
+		pTune.put("tune", tuneFile);
+		
+		pTune.saveEventually(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				progressDialog.hide();
+				if(e == null){
+					Toast.makeText(context, "Your tune uploaded succesfully.", Toast.LENGTH_LONG).show();
+				}else{
+					Toast.makeText(context, "Tune upload failed", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		
+	}
+	
+	public void uploadTune(){
+		progressDialog = ProgressDialog.show(context, "", "Uploading...", true);
+		FileInputStream fileInputStream = null;
+		File file = new File(tuneFile);
+		
+		byte[] bFile = new byte[(int) file.length()];
+		
+		try{
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(bFile);
+			fileInputStream.close();
+			
+		}catch(Exception e){
+			Log.d(TAG, e.toString());
+		}
+		
+		final ParseFile pFile = new ParseFile("audio.mp3", bFile);
+		pFile.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				if(e == null){
+					saveTuneObj(pFile);
+				}else{
+					progressDialog.hide();
+					Toast.makeText(context, "File uplaod failed", Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
 	}
 
 }
