@@ -1,0 +1,24 @@
+package lk.ac.iit.humzearch.adapter;
+
+import android.content.Context;
+
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+
+public class ViewTunesAdapter extends ParseQueryAdapter<ParseObject> {
+
+	public ViewTunesAdapter(Context context) {
+		
+		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+			public ParseQuery create() {
+				ParseQuery<ParseObject> innerQuery = ParseQuery.getQuery("User");
+				ParseQuery<ParseObject> query = ParseQuery.getQuery("Tune");
+				query.whereEqualTo("status", "pending");
+				return query;
+			}
+		});
+		// TODO Auto-generated constructor stub
+	}
+
+}

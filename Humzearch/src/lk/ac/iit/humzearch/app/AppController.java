@@ -1,5 +1,6 @@
 package lk.ac.iit.humzearch.app;
 
+import lk.ac.iit.humzearch.model.TuneParse;
 import lk.ac.iit.humzearch.util.LruBitmapCache;
 import android.app.Application;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import com.android.volley.toolbox.Volley;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseCrashReporting;
+import com.parse.ParseObject;
 
 public class AppController extends Application {
 	 
@@ -25,6 +27,9 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        
+        //Register custom parse classes
+        ParseObject.registerSubclass(TuneParse.class);
         
         ParseCrashReporting.enable(this);
 

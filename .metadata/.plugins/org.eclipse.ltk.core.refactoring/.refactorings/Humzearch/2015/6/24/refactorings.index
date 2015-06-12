@@ -29,3 +29,14 @@
 1434047994772	Extracts string 'null' into R.string.country
 1434048011360	Extracts string 'null' into R.string.year
 1434048028561	Extracts string 'null' into R.string.share
+1434106003347	Rename resource 'view.xml'
+1434106864734	Rename resource 'view_tune_item.xml'
+1434132674086	Rename field 'textView2'
+1434132704445	Rename field 'textView4'
+1434132729917	Rename field 'textView6'
+1434132753347	Rename field 'textView8'
+1434133116479	Extracts string 'null' into R.string.playtune
+1434133951691	Rename field 'seekBar1'
+1434134037437	Rename field 'button1'
+1434134053943	Rename field 'button2'
+1434134253117	Extracts string 'null' into R.string.addresponse

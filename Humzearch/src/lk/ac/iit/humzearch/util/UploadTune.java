@@ -40,6 +40,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.sax.StartElementListener;
@@ -90,48 +92,56 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 
 	@Override
 	protected String doInBackground(Void... params) {
-		String response = recognizeTune();
-		String statusCode, msg, result = null;
-		try{
-			JSONObject jsonObj = new JSONObject(response);
-			statusCode = jsonObj.getString("status");
-			msg = jsonObj.getString("msg");
+		String statusCode, msg, result = "";
+		
+		Log.d(TAG, "Internet connection:" + InternetConnectivity.isConnectedToInternet(context));
+		if(InternetConnectivity.isConnectedToInternet(context)){
+			String response = recognizeTune();
 			
-			Log.d(TAG, statusCode + " " + msg );
-			
-			if(statusCode.equals("1") && msg.equals("success")){
-				tuneData = jsonObj.getJSONArray("data");
+			try{
+				JSONObject jsonObj = new JSONObject(response);
+				statusCode = jsonObj.getString("status");
+				msg = jsonObj.getString("msg");
 				
-				JSONObject t = tuneData.getJSONObject(0);
-				tune.setTitle(t.getString("name"));
-				tune.setArtist(t.getString("artist_name"));
-				tune.setAlbum(t.getString("album"));
+				Log.d(TAG, statusCode + " " + msg );
 				
-				String metaData = getArtwork();
-				jsonObj = new JSONObject(metaData);
-				
-				statusCode = null;
-				statusCode = jsonObj.getString("resultCount");
-				
-				if(statusCode.equals("1")){
-					tuneData = jsonObj.getJSONArray("results");
+				if(statusCode.equals("1") && msg.equals("success")){
+					tuneData = jsonObj.getJSONArray("data");
 					
-					t = tuneData.getJSONObject(0);
-					tune.setImg(t.getString("artworkUrl100"));
-					tune.setCountry(t.getString("country"));
-					tune.setUrl(t.getString("previewUrl"));
+					JSONObject t = tuneData.getJSONObject(0);
+					tune.setTitle(t.getString("name"));
+					tune.setArtist(t.getString("artist_name"));
+					tune.setAlbum(t.getString("album"));
 					
+					String metaData = getArtwork();
+					jsonObj = new JSONObject(metaData);
+					
+					statusCode = null;
+					statusCode = jsonObj.getString("resultCount");
+					
+					if(statusCode.equals("1")){
+						tuneData = jsonObj.getJSONArray("results");
+						
+						t = tuneData.getJSONObject(0);
+						tune.setImg(t.getString("artworkUrl100"));
+						tune.setCountry(t.getString("country"));
+						tune.setUrl(t.getString("previewUrl"));
+					}
+					
+					result = "success";
+					
+				}else{
+					result = msg;
 				}
 				
-				result = "success";
-				
-			}else{
-				result = msg;
+			}catch(JSONException e){
+				Log.d(TAG, e.toString());
 			}
 			
-		}catch(JSONException e){
-			Log.d(TAG, e.toString());
+		}else{
+			result = "No internet connectivity";
 		}
+		
 		Log.d(TAG, tune.toString());
 		return result;
 	}
@@ -214,7 +224,21 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 			intent.putExtra("tune_country", tune.getCountry());
 			intent.putExtra("tune_url", tune.getUrl());
 			context.startActivity(intent);
-		}else{
+			
+		}else if(result.equalsIgnoreCase("No internet connectivity")){
+			alertDialog = new AlertDialog.Builder(context).create();
+			alertDialog.setMessage(result);
+			alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					alertDialog.dismiss();	
+				}
+				
+			});
+			alertDialog.show();
+			
+		} else{
 			alertDialog = new AlertDialog.Builder(context).create();
 			alertDialog.setMessage(result);
 			alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
@@ -318,5 +342,6 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 			}
 		});
 	}
+	
 
 }

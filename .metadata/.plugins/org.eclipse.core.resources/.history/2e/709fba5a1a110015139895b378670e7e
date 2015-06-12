@@ -1,0 +1,38 @@
+package lk.ac.iit.humzearch.model;
+
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+@ParseClassName("Tune")
+public class TuneParse extends ParseObject {
+	
+	public String getArtist(){
+		return getString("artist");
+	}
+	
+	public void setArtist(String artist){
+		put("artist", artist);
+	}
+	
+	public String getCountry(){
+		return getString("country");
+	}
+	
+	public void setCountry(String country){
+		put("country", country);
+	}
+	
+	public ParseUser getCreatedBy(){
+		return getParseUser("createdBy");
+	}
+	
+	public void setCreatedBy(ParseUser user){
+		put("createdBy", user);
+	}
+	
+	public String getLanguage(String language){
+		return getString("language");
+	}
+
+}

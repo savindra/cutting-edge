@@ -309,5 +309,7 @@
 	    <string name="country">Country</string>
 	    <string name="year">Year</string>
 	    <string name="share">Share</string>
+	    <string name="playtune">Play Tune</string>
+	    <string name="addresponse">Add Response</string>
 
 </resources>
