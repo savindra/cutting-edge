@@ -311,5 +311,6 @@
 	    <string name="share">Share</string>
 	    <string name="playtune">Play Tune</string>
 	    <string name="addresponse">Add Response</string>
+	    <string name="title">Title</string>
 
 </resources>

@@ -1,0 +1,19 @@
+package lk.ac.iit.humzearch;
+
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.TextView;
+
+public class ViewTuneItemActivity extends ActionBarActivity {
+	
+	private TextView txtName, txtArtist, txtLanguage, txtCountry, txtYear;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState,
+			PersistableBundle persistentState) {
+		super.onCreate(savedInstanceState, persistentState);
+		
+	}
+
+}

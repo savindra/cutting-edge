@@ -23,7 +23,6 @@ public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
 		
 		super(context, new ParseQueryAdapter.QueryFactory<TuneParse>() {
 			public ParseQuery create() {
-				ParseQuery<ParseUser> innerQuery = ParseUser.getQuery();
 				ParseQuery<ParseObject> query = ParseQuery.getQuery("Tune");
 				query.whereEqualTo("status", "pending");
 				query.include("createdBy");
