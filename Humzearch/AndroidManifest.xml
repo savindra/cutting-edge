@@ -49,7 +49,7 @@
         <activity android:name="lk.ac.iit.humzearch.ViewTuneItemActivity"
             android:label="View Tune"
             android:parentActivityName="lk.ac.iit.humzearch.MainMenuActivity"
-            android:theme="@style/AppTheme.NoTitleBar">
+            android:theme="@style/AppTheme.BackButton">
         </activity>
         
     </application>

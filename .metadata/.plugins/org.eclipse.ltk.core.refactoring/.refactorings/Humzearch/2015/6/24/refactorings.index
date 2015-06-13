@@ -41,3 +41,6 @@
 1434134053943	Rename field 'button2'
 1434134253117	Extracts string 'null' into R.string.addresponse
 1434139611150	Extracts string 'null' into R.string.title
+1434211044703	Rename field 'editText1'
+1434211062615	Rename field 'editText2'
+1434211080298	Rename field 'button1'

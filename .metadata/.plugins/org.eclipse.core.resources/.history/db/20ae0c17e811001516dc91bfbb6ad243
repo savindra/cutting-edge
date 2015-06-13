@@ -1,0 +1,9 @@
+package lk.ac.iit.humzearch.model;
+
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
+@ParseClassName("Response")
+public class Response extends ParseObject {
+
+}

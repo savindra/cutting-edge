@@ -122,9 +122,11 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 	}
 	
 	public void stop(){
-		mMediaPlayer.stop();
-		seekBar.setProgress(0);
-		txtTimer.setText("00:00");
+		if(mMediaPlayer != null && mMediaPlayer.isPlaying()){
+			mMediaPlayer.stop();
+			seekBar.setProgress(0);
+			txtTimer.setText("00:00");
+		}
 	}
 	
 	

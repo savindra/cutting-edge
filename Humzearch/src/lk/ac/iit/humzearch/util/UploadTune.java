@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -33,6 +34,7 @@ import com.parse.SaveCallback;
 import lk.ac.iit.humzearch.R;
 import lk.ac.iit.humzearch.TuneResultActivity;
 import lk.ac.iit.humzearch.model.Tune;
+import lk.ac.iit.humzearch.model.TuneParse;
 import lk.ac.iit.humzearch.util.AndroidMultiPartEntity.ProgressListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -287,14 +289,17 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 	}
 	
 	public void saveTuneObj(ParseFile tuneFile){
-		ParseObject pTune = new ParseObject("Tune");
-		pTune.put("createdBy", ParseUser.getCurrentUser());
-		pTune.put("artist", txtArtist.getText().toString());
-		pTune.put("language", String.valueOf(language.getSelectedItem()));
-		pTune.put("country", String.valueOf(country.getSelectedItem()));
-		pTune.put("year", txtYear.getText().toString());
-		pTune.put("status", "pending");
-		pTune.put("tune", tuneFile);
+		TuneParse pTune = new TuneParse();
+		ParseACL pTuneACL = new ParseACL(ParseUser.getCurrentUser());
+		pTuneACL.setPublicReadAccess(true);
+		pTune.setACL(pTuneACL);
+		pTune.setCreatedBy(ParseUser.getCurrentUser());
+		pTune.setArtist(txtArtist.getText().toString());
+		pTune.setLanguage(String.valueOf(language.getSelectedItem()));
+		pTune.setCountry(String.valueOf(country.getSelectedItem()));
+		pTune.setYear(txtYear.getText().toString());
+		pTune.setStatus("pending");
+		pTune.setTuneFile(tuneFile);
 		
 		pTune.saveEventually(new SaveCallback() {
 			

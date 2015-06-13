@@ -8,6 +8,7 @@ import lk.ac.iit.humzearch.adapter.ViewTunesAdapter;
 import lk.ac.iit.humzearch.model.TuneParse;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,8 @@ public class ViewTuneFragment extends Fragment {
 	private ViewTunesAdapter adapter;
 	private ListView listView;
 	private List<TuneParse> tuneList;
+	
+	private ProgressDialog progressDialog;
 	
 	public ViewTuneFragment(){}
 	
@@ -38,6 +41,7 @@ public class ViewTuneFragment extends Fragment {
 		
 		listView = (ListView) rootView.findViewById(R.id.listViewTune);
 		listView.setAdapter(adapter);
+		
 		adapter.loadObjects();
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -47,7 +51,6 @@ public class ViewTuneFragment extends Fragment {
 					int position, long id) {
 				TuneParse t = adapter.getItem(position);
 				String objID = t.getObjectId();
-				Toast.makeText(getActivity(), objID, Toast.LENGTH_SHORT).show();
 				
 				Intent intent = new Intent(getActivity(), ViewTuneItemActivity.class);
 				intent.putExtra("tuneParseID", objID);

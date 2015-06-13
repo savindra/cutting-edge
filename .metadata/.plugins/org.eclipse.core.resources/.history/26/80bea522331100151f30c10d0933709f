@@ -1,7 +1,0 @@
-package lk.ac.iit.humzearch;
-
-import android.support.v7.app.ActionBarActivity;
-
-public class ViewTuneItemActivity extends ActionBarActivity {
-
-}

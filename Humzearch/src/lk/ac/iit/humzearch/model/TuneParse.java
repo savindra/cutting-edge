@@ -1,15 +1,12 @@
 package lk.ac.iit.humzearch.model;
 
-import java.io.Serializable;
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-@SuppressWarnings("serial")
 @ParseClassName("Tune")
-public class TuneParse extends ParseObject implements Serializable  {
+public class TuneParse extends ParseObject  {
 	
 	public String getArtist(){
 		return getString("artist");

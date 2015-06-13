@@ -13,7 +13,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/txtViewTuneDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
@@ -29,13 +29,13 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/txtViewTuneDialogArtist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnViewTuneDialogResponse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/addresponse" />
