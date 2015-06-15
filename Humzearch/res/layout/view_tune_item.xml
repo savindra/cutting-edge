@@ -66,7 +66,7 @@
         android:layout_marginRight="10dip" >
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txtViewResponseItemArtist"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@string/language"
@@ -92,7 +92,7 @@
         android:layout_marginRight="10dip" >
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/txtViewResponseDelete"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:text="@string/country"
@@ -135,7 +135,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtViewResponseItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayout4"
@@ -149,12 +149,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/txtViewResponseItemTitle"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -176,8 +175,9 @@
             android:layout_marginLeft="22dp"
             android:background="@drawable/pause_button" />
     </LinearLayout>
-    
+
     <LinearLayout
+        android:id="@+id/linearLayout5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -188,16 +188,26 @@
         android:gravity="center"
         android:orientation="vertical" >
 
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="17dp"
+            android:text="@string/deletepermanently"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#66B2FF" />
+
         <Button
             android:id="@+id/btnViewTuneResponse"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textSize="16sp"
-            android:text="@string/addresponse"
             android:background="@drawable/buttonshape"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
+            android:text="@string/addresponse"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
+    </LinearLayout>
 </RelativeLayout>
+
 </ScrollView>

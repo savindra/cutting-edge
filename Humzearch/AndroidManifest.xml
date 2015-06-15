@@ -52,6 +52,12 @@
             android:theme="@style/AppTheme.BackButton">
         </activity>
         
+        <activity android:name="lk.ac.iit.humzearch.ViewResponseItem"
+            android:label="View Response"
+            android:parentActivityName="lk.ac.iit.humzearch.MainMenuActivity"
+            android:theme="@style/AppTheme.BackButton">
+        </activity>
+        
     </application>
 
 </manifest>

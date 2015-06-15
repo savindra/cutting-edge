@@ -61,7 +61,7 @@
     
     <!-- Country List -->
     <string-array name="countries_array">
-        <item>-- Not Selected --</item>
+        <item>Not Selected</item>
 	    <item>Afghanistan</item>
 	    <item>Albania</item>
 	    <item>Algeria</item>
@@ -314,5 +314,9 @@
 	    <string name="title">Title</string>
 	    <string name="alltunes">All Tunes</string>
 	    <string name="mytunes">My Tunes</string>
+	    <string name="deletepermanently">Delete Permanently</string>
+	    <string name="respondedtune">Responded Tune</string>
+	    <string name="accept">Accept</string>
+	    <string name="reject">REJECT</string>
 
 </resources>

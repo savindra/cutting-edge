@@ -5,15 +5,19 @@ import java.util.List;
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
 
 import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.ViewResponseItem;
 import lk.ac.iit.humzearch.adapter.ViewResponseAdapter;
 import lk.ac.iit.humzearch.model.Response;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ViewResponseFragment extends Fragment {
@@ -53,6 +57,22 @@ public class ViewResponseFragment extends Fragment {
 		listview.setAdapter(responseAdapter);
 		responseAdapter.loadObjects();
 		
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Response r = responseAdapter.getItem(position);
+				
+				Intent intent = new Intent(getActivity(), ViewResponseItem.class);
+				intent.putExtra("response_id", r.getObjectId());
+				intent.putExtra("response_name", r.getCreatedBy().getString("name"));
+				intent.putExtra("response_title", r.getTitle());
+				intent.putExtra("response_artist", r.getArtist());
+				startActivity(intent);
+				
+			}
+		});
 	}
 
 }
