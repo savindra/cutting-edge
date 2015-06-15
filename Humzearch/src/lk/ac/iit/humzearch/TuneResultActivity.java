@@ -15,6 +15,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -39,6 +43,7 @@ public class TuneResultActivity extends ActionBarActivity {
 	private SeekBar seekBar;
 	private TextView txtTimer;
 	private double timeElapsed = 0;
+	private Spannable spanUnderline;
 	
 	private Handler timerHandler;
 	private boolean isPlaying = false;;
@@ -48,12 +53,15 @@ public class TuneResultActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.record_tune_result);
 		
+		getSupportActionBar().setTitle("Search Result");
+		
 		txtTitle = (TextView) findViewById(R.id.txtTuneResultName);
 		txtArtist = (TextView) findViewById(R.id.txtTuneResultArtist);
 		txtAlbum = (TextView) findViewById(R.id.txtTuneResultAlbum);
 		txtCountry = (TextView) findViewById(R.id.txtTuneResultCountry);
 		imgArtwork = (NetworkImageView) findViewById(R.id.imgTuneResultCover);
 		txtPlayPreview = (TextView) findViewById(R.id.txtRecordTuneResultPlayPreview);
+		txtPlayPreview.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		filData();
 	}
@@ -69,7 +77,9 @@ public class TuneResultActivity extends ActionBarActivity {
 				imgArtwork.setImageUrl(extras.getString("tune_img"), imageLoader);
 			}
 			
-			txtTitle.setText(extras.getString("tune_title"));
+			spanUnderline = new SpannableString(extras.getString("tune_title"));
+			spanUnderline.setSpan(new UnderlineSpan(), 0, spanUnderline.length(), 0);
+			txtTitle.setText(spanUnderline);
 			txtArtist.setText(extras.getString("tune_artist"));
 			txtAlbum.setText(extras.getString("tune_album"));
 			txtCountry.setText(extras.getString("tune_country"));

@@ -82,7 +82,8 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 	public UploadTune(Context context, String tuneFile) {
 		super();
 		this.context = context;
-		this.tuneFile = tuneFile;
+		this.tuneFile = "/storage/emulated/0/Download/test.mp3";
+;
 		tune = new Tune();
 	}
 
@@ -151,9 +152,15 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 	public String getArtwork(){
 		StringBuilder sb = new StringBuilder();
 		JSONObject json = null;
+		String artist;
+		if(tune.getArtist().equalsIgnoreCase("various artists")){
+			artist = tune.getAlbum();
+		}else{
+			artist = tune.getArtist();
+		}
 		
 		ITUNES_LINK += "?term=" + tune.getTitle().replace(" ", "+").trim() + "+" +
-				tune.getArtist().replace(" ", "+").trim() + "&media=music&entity=song&limit=1";
+				artist.replace(" ", "+").trim() + "&media=music&entity=song&limit=1";
 		
 		Log.d(TAG, ITUNES_LINK);
 		try{

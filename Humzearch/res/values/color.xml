@@ -15,4 +15,8 @@
     
     <color name="button">#ccc</color>
     
+    <color name="link">#909090</color>
+    <color name="secondbar">#f5f5f5</color>
+    <color name="background">#fcfcfc</color>
+    
 </resources>

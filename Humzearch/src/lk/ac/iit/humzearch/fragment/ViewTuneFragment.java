@@ -2,6 +2,8 @@ package lk.ac.iit.humzearch.fragment;
 
 import java.util.List;
 
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
+
 import lk.ac.iit.humzearch.R;
 import lk.ac.iit.humzearch.ViewTuneItemActivity;
 import lk.ac.iit.humzearch.adapter.ViewTunesAdapter;
@@ -22,8 +24,6 @@ public class ViewTuneFragment extends Fragment {
 	
 	private ViewTunesAdapter adapter;
 	private ListView listView;
-	private List<TuneParse> tuneList;
-	
 	private ProgressDialog progressDialog;
 	
 	public ViewTuneFragment(){}
@@ -38,6 +38,20 @@ public class ViewTuneFragment extends Fragment {
 	
 	private void intialize(View rootView){
 		adapter = new ViewTunesAdapter(getActivity());
+		adapter.setPaginationEnabled(true);
+		adapter.addOnQueryLoadListener(new OnQueryLoadListener<TuneParse>() {
+
+			@Override
+			public void onLoaded(List<TuneParse> objects, Exception e) {
+				 progressDialog.dismiss();
+			}
+
+			@Override
+			public void onLoading() {
+				if(progressDialog == null)
+					progressDialog = ProgressDialog.show(getActivity(), "", "Loading...", true);
+			}
+		});
 		
 		listView = (ListView) rootView.findViewById(R.id.listViewTune);
 		listView.setAdapter(adapter);

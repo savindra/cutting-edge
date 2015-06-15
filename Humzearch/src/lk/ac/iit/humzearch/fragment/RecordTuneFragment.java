@@ -16,6 +16,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,7 +53,7 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
     private String outputFile = null;
     
     private Button btnPlay,btnStop;
-    private Button btnSearch;
+    private LinearLayout btnSearch;
     private SeekBar seekBar;
     
     private boolean mIsRecording = false, isPlaying = false;;
@@ -66,7 +70,7 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 		btnPlay = (Button) rootView.findViewById(R.id.btnRecordTunePlay);
 		btnStop = (Button) rootView.findViewById(R.id.btnRecordTuneStop);
 		seekBar = (SeekBar) rootView.findViewById(R.id.recordTuneSeekBar);
-		btnSearch = (Button) rootView.findViewById(R.id.btnRecordTuneSearch);
+		btnSearch = (LinearLayout) rootView.findViewById(R.id.btnRecordTuneSearch);
 		
 		btnPlay.setEnabled(false);
 		btnStop.setEnabled(false);

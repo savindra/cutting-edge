@@ -45,7 +45,7 @@
     
     <string name="notsatisfied">Not satisfied with results?</string>
     
-    <string name="sharewithcommunity">Share with Community</string>
+    <string name="sharewithcommunity">SHARE WITH COMMUNITY</string>
     
     <!-- Language List -->
     <string-array name="language_array">
@@ -310,7 +310,9 @@
 	    <string name="year">Year</string>
 	    <string name="share">Share</string>
 	    <string name="playtune">Play Tune</string>
-	    <string name="addresponse">Add Response</string>
+	    <string name="addresponse">ADD RESPONSE</string>
 	    <string name="title">Title</string>
+	    <string name="alltunes">All Tunes</string>
+	    <string name="mytunes">My Tunes</string>
 
 </resources>

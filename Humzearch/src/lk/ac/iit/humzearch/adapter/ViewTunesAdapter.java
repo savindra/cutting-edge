@@ -5,6 +5,7 @@ import java.util.List;
 import lk.ac.iit.humzearch.R;
 import lk.ac.iit.humzearch.model.Tune;
 import lk.ac.iit.humzearch.model.TuneParse;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,6 @@ public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
 		String tags = "TAGS: " + object.getArtist() +" "+ object.getLanguage()
 				+" "+ object.getCountry() +" "+ object.getYear();
 		txtTag.setText(tags);
-		
 		
 		return v;
 	}

@@ -1,7 +1,0 @@
-package lk.ac.iit.humzearch.fragment;
-
-import android.support.v4.app.Fragment;
-
-public class ViewTuneFragment extends Fragment {
-
-}
