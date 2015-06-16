@@ -1,0 +1,21 @@
+package lk.ac.iit.humzearch.model;
+
+import com.parse.ParseClassName;
+import com.parse.ParseObject;
+
+@ParseClassName("UserData")
+public class UserData extends ParseObject {
+	
+	public int getPoints(){
+		return getInt("points");
+	}
+	
+	public void setPoints(int points){
+		put("points", points);
+	}
+	
+	
+	
+	
+
+}

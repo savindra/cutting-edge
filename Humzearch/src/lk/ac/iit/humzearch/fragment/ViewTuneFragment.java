@@ -71,6 +71,8 @@ public class ViewTuneFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
+		
+		adapter.notifyDataSetChanged();
 	}
 
 }

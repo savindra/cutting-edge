@@ -2,6 +2,7 @@ package lk.ac.iit.humzearch.app;
 
 import lk.ac.iit.humzearch.model.Response;
 import lk.ac.iit.humzearch.model.TuneParse;
+import lk.ac.iit.humzearch.model.UserData;
 import lk.ac.iit.humzearch.util.LruBitmapCache;
 import android.app.Application;
 import android.text.TextUtils;
@@ -32,6 +33,7 @@ public class AppController extends Application {
         //Register custom parse classes
         ParseObject.registerSubclass(TuneParse.class);
         ParseObject.registerSubclass(Response.class);
+        ParseObject.registerSubclass(UserData.class);
         
         ParseCrashReporting.enable(this);
 

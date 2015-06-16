@@ -62,6 +62,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	private ParseQuery<TuneParse> tuneQuery;
 	private String tuneObjID;
 	int result;
+	int responseCount;
 	
 	private Handler timerHandler;
 
@@ -243,43 +244,15 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 				
 				}else if(tuneParse.getCreatedBy().getUsername().equalsIgnoreCase(ParseUser.getCurrentUser().getUsername())){
 					displayToast(responseDialog.getContext(), "You cannot add response to your tune.");
-				}else if(responsesToTuneCount() != 0){
-					displayToast(responseDialog.getContext(), "You've already added a response to this tune.");
 				}else{
-					progressDialog = ProgressDialog.show(responseDialog.getContext(), "", "Loading...", true);
-					
-					Response response = new Response();
-					ParseACL responseACL = new ParseACL(ParseUser.getCurrentUser());
-					responseACL.setWriteAccess(tuneParse.getCreatedBy(), true);
-					responseACL.setPublicReadAccess(true);
-					response.setACL(responseACL);
-					
-					response.setCreatedBy(ParseUser.getCurrentUser());
-					response.setTune(tuneParse);
-					response.setArtist(txtDialogArtist.getText().toString());
-					response.setTitle(txtDialogTitle.getText().toString());
-					response.setStatus("pending");
-					response.saveEventually(new SaveCallback() {
-						
-						@Override
-						public void done(ParseException e) {
-							progressDialog.dismiss();
-							if(e == null){
-								responseDialog.dismiss();
-								Toast.makeText(responseDialog.getContext(), "Your response recorded. Thank you!", Toast.LENGTH_LONG).show();
-							}else{
-								Toast.makeText(responseDialog.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-							}
-							
-						}
-					});
+					responsesToTuneCount();
 				}
 			}
 		});
 	}
 	
-	public int responsesToTuneCount(){
-		result = -1;
+	public void responsesToTuneCount(){
+		progressDialog = ProgressDialog.show(responseDialog.getContext(), "", "Loading...", true);
 		ParseQuery<Response> query = ParseQuery.getQuery("Response");
 		query.whereEqualTo("createdBy", ParseUser.getCurrentUser());
 		query.whereEqualTo("tune", tuneParse);
@@ -288,15 +261,52 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 			@Override
 			public void done(int count, ParseException e) {
 				if(e == null){
-					result = count;
+					if(count == 0 ){
+						saveResponse();
+					}else{
+						progressDialog.dismiss();
+						displayToast(responseDialog.getContext(), "You've already added a response to this tune.");
+					}
+						
 				}else{
+					progressDialog.dismiss();
 					displayToast(responseDialog.getContext(), e.getMessage());
 				}
 				
 			}
 		});
-		return result;
 	}
+	
+	public void saveResponse(){
+		
+		Response response = new Response();
+		ParseACL responseACL = new ParseACL(ParseUser.getCurrentUser());
+		responseACL.setWriteAccess(tuneParse.getCreatedBy(), true);
+		responseACL.setPublicReadAccess(true);
+		response.setACL(responseACL);
+		
+		response.setCreatedBy(ParseUser.getCurrentUser());
+		response.setTune(tuneParse);
+		response.setArtist(txtDialogArtist.getText().toString());
+		response.setTitle(txtDialogTitle.getText().toString());
+		response.setStatus("pending");
+		response.saveEventually(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				progressDialog.dismiss();
+				if(e == null){
+					responseDialog.dismiss();
+					Toast.makeText(responseDialog.getContext(), "Your response recorded. Thank you!", Toast.LENGTH_LONG).show();
+				}else{
+					Toast.makeText(responseDialog.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
+	}
+	
+	
 	
 	public boolean validateDialog(){
 		String title = txtDialogTitle.getText().toString();

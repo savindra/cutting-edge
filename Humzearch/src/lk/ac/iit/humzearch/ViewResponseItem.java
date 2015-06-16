@@ -3,9 +3,12 @@ package lk.ac.iit.humzearch;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import lk.ac.iit.humzearch.model.Response;
+import lk.ac.iit.humzearch.model.UserData;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseException;
@@ -13,8 +16,10 @@ import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,12 +28,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ViewResponseItem extends ActionBarActivity {
 	
@@ -52,8 +59,10 @@ public class ViewResponseItem extends ActionBarActivity {
 	private Response response;
 	private String responseObjId;
 	private String status;
+	private boolean isConfirmed;
 	
 	private ProgressDialog progressDialog;
+	private AlertDialog alertDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,17 +108,158 @@ public class ViewResponseItem extends ActionBarActivity {
 			}
 		});
 		
+		btnReject.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				getConfirmation("reject");
+				
+			}
+		});
+		
+		btnAccept.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				getConfirmation("accept");
+			}
+		});
+		
 		downloadData();
 	}
 	
-	private void submit(boolean isAccepted){
-		if(isAccepted)
-			status ="accepted";
-		else
-			status = "rejected";
+	public void getCurrentStatus(final String action){
+		responseQuery = ParseQuery.getQuery("Response");
+		responseQuery.getInBackground(responseObjId, new GetCallback<Response>() {
+			
+			@Override
+			public void done(Response object, ParseException e) {
+				if(e == null){
+					if(object.getStatus().equalsIgnoreCase("pending")){
+						if(action.equalsIgnoreCase("accept"))
+							accept();
+						else
+							reject();
+					}else{
+						displayToast("This response is already " + object.getStatus() + ".");
+					}
+				}else{
+					Log.d(TAG, e.getMessage());
+				}
+			}
+		});
+	}
+	
+	private void accept(){
+		responseQuery = ParseQuery.getQuery("Response");
+		responseQuery.whereEqualTo("tune", response.getTune());
+		responseQuery.include("tune");
+		responseQuery.include("createdBy");
+		responseQuery.findInBackground(new FindCallback<Response>() {
+			
+			@Override
+			public void done(List<Response> objects, ParseException e) {
+				if(e == null){
+					for(Response r : objects){
+						
+						if(r.getObjectId().equalsIgnoreCase(responseObjId)){
+							r.put("status", "accepted");
+							r.getTune().put("status", "solved");
+							addPoints(r.getCreatedBy());
+						}else{
+							r.put("status", "rejected");
+						}
+						
+						r.saveEventually();
+					}
+					
+				}else{
+					Log.d(TAG, e.getMessage());
+					displayToast(e.getMessage());
+				}
+				
+			}
+		});
+	}
+	
+	public void addPoints(ParseUser user){
+		ParseQuery<UserData> userDataQuery = ParseQuery.getQuery("UserData");
+		userDataQuery.whereEqualTo("createdBy", user);
+		userDataQuery.getFirstInBackground(new GetCallback<UserData>() {
+			
+			@Override
+			public void done(UserData object, ParseException e) {
+				if(e == null){
+					object.increment("points", 10);
+					object.saveEventually();
+					displayToast("This response accepted successfully.");
+				}else{
+					Log.d(TAG, e.getMessage());
+				}
+				
+			}
+		});
+	}
+	
+	private void reject(){
 		
 		responseQuery = ParseQuery.getQuery("Response");
+		responseQuery.getInBackground(responseObjId, new GetCallback<Response>() {
+			
+			@Override
+			public void done(Response object, ParseException e) {
+				if(e == null){
+					object.put("status", "rejected");
+					object.saveInBackground(new SaveCallback() {
+						
+						@Override
+						public void done(ParseException e) {
+							if(e == null){
+								displayToast("Response rejected successfully.");
+							}else{
+								Log.d(TAG, e.getMessage());
+								displayToast(e.getMessage());
+							}
+						}
+					});
+					
+				}else{
+					Log.d(TAG, e.getMessage());
+					displayToast(e.getMessage());
+				}
+				
+			}
+		});
+		
 	}
+	
+	private void getConfirmation(final String status){
+		alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setMessage("Are you sure you want to " + status + " this response?");
+		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertDialog.dismiss();
+			}
+		});
+		
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				isConfirmed = true;
+				if(status.equalsIgnoreCase("accept"))
+					getCurrentStatus("accept");
+				else{
+					getCurrentStatus("reject");
+				}
+				alertDialog.dismiss();
+			}
+		});
+		alertDialog.show();
+	}
+	
 	
 	private void play() {
 		isPlaying = true;
@@ -244,6 +394,10 @@ public class ViewResponseItem extends ActionBarActivity {
         return mediaFile;
 	}
 	
+	public void displayToast(String message){
+		if(!message.equalsIgnoreCase(""))
+			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+	}
 	
 
 }

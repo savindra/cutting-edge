@@ -2,6 +2,7 @@ package lk.ac.iit.humzearch.fragment;
 
 import java.io.ByteArrayOutputStream;
 
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -9,6 +10,7 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.model.UserData;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class TabSignUp extends Fragment {
+	
+	private final String TAG = TabSignUp.class.getSimpleName();
 	
 	private TextView txtName;
 	private TextView txtEmail;
@@ -83,10 +87,10 @@ public class TabSignUp extends Fragment {
 	private void signup(ParseFile imgFile){
 		
 		ParseUser user = new ParseUser();
+		
 		user.setUsername(email);
 		user.setPassword(password);
 		user.put("image", imgFile);
-		user.put("points", 0);
 		user.put("name", name);
 		
 		user.signUpInBackground(new SignUpCallback() {
@@ -95,14 +99,43 @@ public class TabSignUp extends Fragment {
 			public void done(ParseException e) {
 				progressDialog.hide();
 				if(e == null){
-					result = "Registration completed.";
-					ParseUser.logOut();
+					registerUserData();
 				} else {
-					result = e.toString();
+					displayResult(e.getMessage(), false);
 				}
-				displayResult(result, true);
 			}
 		});
+	}
+	
+	public void registerUserData(){
+		UserData userData = new UserData();
+		userData.setCreatedBy(ParseUser.getCurrentUser());
+		userData.setAddress1("");
+		userData.setAddress2("");
+		userData.setCity("");
+		userData.setCountry("");
+		userData.setPostCode("");
+		userData.setPoints(0);
+		
+		ParseACL userDataACL = new ParseACL(ParseUser.getCurrentUser());
+		userDataACL.setPublicWriteAccess(true);
+		userDataACL.setPublicReadAccess(true);
+		userData.setACL(userDataACL);
+		
+		userData.saveEventually(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				if(e == null){
+					displayResult("Registration completed.", true);
+					ParseUser.logOut();
+				}else{
+					Log.d(TAG, e.getMessage());
+					displayResult(e.getMessage(), false);
+				}
+			}
+		});
+		
 	}
 	
 	private void displayResult(String result, boolean isLong){

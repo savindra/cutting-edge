@@ -2,3 +2,19 @@
 1434300413594	Extracts string 'null' into R.string.mytunes
 1434378461837	Rename field 'imageView1'
 1434378527092	Rename field 'textView1'
+1434384703894	Rename field 'imageView1'
+1434384725630	Rename field 'textView1'
+1434384906852	Rename field 'textView2'
+1434385218025	Extracts string 'null' into R.string.deletepermanently
+1434388901003	Extracts string 'null' into R.string.yourtune
+1434389277551	Extracts string 'null' into R.string.respondedtune
+1434389448381	Rename resource 'view_response_items.xml'
+1434390576994	Extracts string 'null' into R.string.accept
+1434390606137	Extracts string 'null' into R.string.reject
+1434390812039	Rename field 'seekBar1'
+1434390839204	Rename field 'button1'
+1434390855166	Rename field 'button2'
+1434390875275	Rename field 'textView5'
+1434390892040	Rename field 'button3'
+1434390908838	Rename field 'button4'
+1434391753028	Rename field 'textView3'

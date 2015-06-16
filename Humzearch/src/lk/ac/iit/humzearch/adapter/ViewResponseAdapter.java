@@ -16,8 +16,6 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 public class ViewResponseAdapter extends ParseQueryAdapter<Response> {
-	
-	static ParseUser currentUser = ParseUser.getCurrentUser();
 
 	public ViewResponseAdapter(Context context) {
 		
@@ -26,10 +24,9 @@ public class ViewResponseAdapter extends ParseQueryAdapter<Response> {
 			@Override
 			public ParseQuery<Response> create() {
 				ParseQuery<TuneParse> innerQuery = ParseQuery.getQuery("Tune");
-				innerQuery.whereEqualTo("createdBy", currentUser);
+				innerQuery.whereEqualTo("createdBy", ParseUser.getCurrentUser());
 				ParseQuery<Response> query = ParseQuery.getQuery("Response");
 				query.whereMatchesQuery("tune", innerQuery);
-				query.whereEqualTo("status", "pending");
 				query.include("tune");
 				query.include("createdBy");
 				query.addDescendingOrder("createdAt");

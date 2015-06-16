@@ -73,6 +73,7 @@ public class ViewResponseFragment extends Fragment {
 				
 			}
 		});
+		responseAdapter.notifyDataSetChanged();
 	}
 
 }
