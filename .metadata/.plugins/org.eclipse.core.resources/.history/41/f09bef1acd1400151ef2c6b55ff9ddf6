@@ -1,0 +1,24 @@
+package lk.ac.iit.humzearch.adapter;
+
+import lk.ac.iit.humzearch.model.Reward;
+import android.content.Context;
+
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+
+public class ViewRewardAdapter extends ParseQueryAdapter<Reward> {
+
+	public ViewRewardAdapter(Context context) {
+		super(context,  new ParseQueryAdapter.QueryFactory<Reward>() {
+
+			public ParseQuery create() {
+				ParseQuery<Reward> query = ParseQuery.getQuery("reward");
+				query.orderByDescending("value");
+				return query;
+			}
+			
+		});
+		// TODO Auto-generated constructor stub
+	}
+
+}

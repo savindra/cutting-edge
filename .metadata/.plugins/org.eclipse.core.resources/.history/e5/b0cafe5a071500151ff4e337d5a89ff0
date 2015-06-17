@@ -1,0 +1,101 @@
+package lk.ac.iit.humzearch;
+
+import lk.ac.iit.humzearch.app.AppController;
+import lk.ac.iit.humzearch.model.UserData;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.parse.CountCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class ViewRewardItem extends ActionBarActivity {
+	
+	private TextView txtName, txtDescription, txtValue;
+	private NetworkImageView imgReward;
+	private ImageLoader imageLoader;
+	private Button btnRedeem;
+	private Intent i;
+	private ProgressDialog progressDialog;
+	private String rewardId;
+	
+	private ParseUser currentUser;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.view_reward_item);
+		initialize();
+	}
+
+	private void initialize() {
+		txtName = (TextView) findViewById(R.id.txtViewRewardItemName);
+		txtDescription = (TextView) findViewById(R.id.txtViewRewardItemDesc);
+		txtValue = (TextView) findViewById(R.id.txtViewRewardItemValue);
+		imgReward = (NetworkImageView) findViewById(R.id.imgViewRewardItem);
+		imageLoader = AppController.getInstance().getImageLoader();
+		i = getIntent();
+		currentUser = ParseUser.getCurrentUser();
+		btnRedeem = (Button) findViewById(R.id.btnViewRewardRedeem);
+		btnRedeem.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				getUserPoints();
+			}
+		});
+		
+		fillData();
+	}
+
+	private void fillData() {
+		txtName.setText(i.getStringExtra("reward_name"));
+		imgReward.setImageUrl(i.getStringExtra("reward_img"), imageLoader);
+		txtDescription.setText(i.getStringExtra("reward_desc"));
+		txtValue.setText(i.getStringExtra("reward_value") + " points");
+		rewardId = i.getStringExtra("reward_id");
+		
+	}
+	
+	public void getUserPoints(){
+		ParseQuery<UserData> userDataQuery = ParseQuery.getQuery("UserData");
+		userDataQuery.whereEqualTo("createdBy", currentUser);
+		userDataQuery.whereGreaterThanOrEqualTo("points", Integer.parseInt(i.getStringExtra("reward_value")));
+		userDataQuery.countInBackground(new CountCallback() {
+			
+			@Override
+			public void done(int count, ParseException e) {
+				if(e == null){
+					if(count == 1){
+						redeem();
+					}else{
+						
+					}
+				}
+				
+			}
+		});
+	}
+	
+	private void redeem(){
+		
+	}
+	
+	private void displayToast(String message){
+		Toast.makeText(getApplication(), message, Toast.LENGTH_SHORT);
+	}
+	
+
+}

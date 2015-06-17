@@ -7,6 +7,7 @@ import com.parse.ParseUser;
 import lk.ac.iit.humzearch.adapter.NavDrawerListAdapter;
 import lk.ac.iit.humzearch.fragment.RecordTuneFragment;
 import lk.ac.iit.humzearch.fragment.ViewResponseFragment;
+import lk.ac.iit.humzearch.fragment.ViewRewardsFragment;
 import lk.ac.iit.humzearch.fragment.ViewTuneFragment;
 import lk.ac.iit.humzearch.model.NavDrawerItem;
 import android.annotation.SuppressLint;
@@ -137,6 +138,9 @@ public class MainMenuActivity extends ActionBarActivity {
 			break;
 		case 2:
 			fragment = new ViewResponseFragment();
+			break;
+		case 3:
+			fragment = new ViewRewardsFragment();
 			break;
 		default:
 			break;

@@ -1,0 +1,13 @@
+package lk.ac.iit.humzearch.model;
+
+import com.parse.ParseObject;
+
+public class Reward extends ParseObject {
+	
+	public String getName(){
+		return getString("name");
+	}
+	
+	
+
+}

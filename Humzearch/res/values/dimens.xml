@@ -5,9 +5,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fontsize">18sp</dimen>
     
-    <dimen name="title">17dp</dimen>
-    <dimen name="rating">15dip</dimen>
-    <dimen name="genre">13dip</dimen>
-    <dimen name="year">12dip</dimen>
+    <dimen name="large">17dp</dimen>
+    <dimen name="medium">15dip</dimen>
+    <dimen name="small">13dip</dimen>
+    <dimen name="tiny">12dip</dimen>
 
 </resources>

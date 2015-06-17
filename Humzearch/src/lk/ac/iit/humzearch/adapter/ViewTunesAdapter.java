@@ -3,6 +3,7 @@ package lk.ac.iit.humzearch.adapter;
 import java.util.List;
 
 import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.Tune;
 import lk.ac.iit.humzearch.model.TuneParse;
 import android.app.ProgressDialog;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseObject;
@@ -19,6 +22,8 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
+	
+	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public ViewTunesAdapter(Context context) {
 		
@@ -40,12 +45,9 @@ public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
 		}
 		super.getItemView(object, v, parent);
 		
-		ParseImageView imgUser = (ParseImageView) v.findViewById(R.id.imgViewTuneUser);
-		ParseFile imgFile = object.getCreatedBy().getParseFile("image");
-		if(imgFile != null){
-			imgUser.setParseFile(imgFile);
-			imgUser.loadInBackground();
-		}
+		NetworkImageView imgUser = (NetworkImageView) v.findViewById(R.id.imgViewTuneUser);
+		String imgUrl = object.getCreatedBy().getParseFile("image").getUrl();
+		imgUser.setImageUrl(imgUrl, imageLoader);
 		
 		TextView txtName = (TextView) v.findViewById(R.id.txtViewTuneUsername);
 		txtName.setText(object.getCreatedBy().getString("name"));

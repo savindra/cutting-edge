@@ -1,6 +1,7 @@
 package lk.ac.iit.humzearch.adapter;
 
 import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.Response;
 import lk.ac.iit.humzearch.model.TuneParse;
 import android.content.Context;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
@@ -16,6 +19,8 @@ import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
 public class ViewResponseAdapter extends ParseQueryAdapter<Response> {
+	
+	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public ViewResponseAdapter(Context context) {
 		
@@ -42,13 +47,9 @@ public class ViewResponseAdapter extends ParseQueryAdapter<Response> {
 		}
 		super.getItemView(object, v, parent);
 		
-		ParseImageView imgUser = (ParseImageView) v.findViewById(R.id.imgViewResponseUser);
-		ParseFile imgFile = object.getCreatedBy().getParseFile("image");
-		
-		if(imgFile != null){
-			imgUser.setParseFile(imgFile);
-			imgUser.loadInBackground();
-		}
+		NetworkImageView imgUser = (NetworkImageView) v.findViewById(R.id.imgViewResponseUser);
+		String imgUrl = object.getCreatedBy().getParseFile("image").getUrl();
+		imgUser.setImageUrl(imgUrl, imageLoader);
 		
 		
 		TextView txtMessage = (TextView) v.findViewById(R.id.txtViewResponse);

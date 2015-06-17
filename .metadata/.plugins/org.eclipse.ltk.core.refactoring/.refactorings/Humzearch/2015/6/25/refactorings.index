@@ -18,3 +18,15 @@
 1434390892040	Rename field 'button3'
 1434390908838	Rename field 'button4'
 1434391753028	Rename field 'textView3'
+1434528991479	Delete element
+1434529302624	Change Layout
+1434530181909	Rename field 'imageView1'
+1434530201336	Rename field 'textView1'
+1434530226772	Rename field 'textView2'
+1434531492649	Rename field 'txtViewTuneValue'
+1434549458198	Change Layout
+1434549916156	Extracts string 'null' into R.string.redeem
+1434550119731	Rename field 'textView1'
+1434550140643	Rename field 'imageView1'
+1434550160603	Rename field 'textView2'
+1434550177734	Rename field 'textView3'

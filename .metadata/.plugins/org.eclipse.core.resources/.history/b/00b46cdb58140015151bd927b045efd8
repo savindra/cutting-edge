@@ -1,0 +1,9 @@
+package lk.ac.iit.humzearch.fragment;
+
+import android.app.Fragment;
+
+public class ViewRewardsFragment extends Fragment {
+	
+	
+
+}

@@ -1,6 +1,7 @@
 package lk.ac.iit.humzearch.app;
 
 import lk.ac.iit.humzearch.model.Response;
+import lk.ac.iit.humzearch.model.Reward;
 import lk.ac.iit.humzearch.model.TuneParse;
 import lk.ac.iit.humzearch.model.UserData;
 import lk.ac.iit.humzearch.util.LruBitmapCache;
@@ -34,6 +35,7 @@ public class AppController extends Application {
         ParseObject.registerSubclass(TuneParse.class);
         ParseObject.registerSubclass(Response.class);
         ParseObject.registerSubclass(UserData.class);
+        ParseObject.registerSubclass(Reward.class);
         
         ParseCrashReporting.enable(this);
 

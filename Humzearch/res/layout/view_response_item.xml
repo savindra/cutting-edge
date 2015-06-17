@@ -30,7 +30,7 @@
         android:layout_marginTop="10dp" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/txtViewRewardName"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:text="@string/title"
@@ -65,7 +65,7 @@
         android:layout_marginTop="5dp" >
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/txtViewRewardValue"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:text="@string/artist"

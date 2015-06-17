@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/imgViewReward"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_reward" />
+
+    <TextView
+        android:id="@+id/txtViewRewardName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imgViewReward"
+        android:layout_toLeftOf="@+id/imageView2"
+        android:layout_toRightOf="@+id/imgViewReward"
+        android:text="TextView"
+        android:textSize="@dimen/medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtViewRewardValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgViewReward"
+        android:layout_alignRight="@+id/txtViewRewardName"
+        android:layout_marginBottom="30dp"
+        android:layout_toRightOf="@+id/imgViewReward"
+        android:text="TextView"
+        android:textSize="@dimen/medium" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="18dp"
+        android:layout_height="54dp"
+        android:layout_alignBottom="@+id/txtViewRewardValue"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_right_arrow" />
+
+</RelativeLayout>

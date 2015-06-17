@@ -1,0 +1,7 @@
+package lk.ac.iit.humzearch.adapter;
+
+import com.parse.ParseQueryAdapter;
+
+public class ViewRewardAdapter extends ParseQueryAdapter<Reward> {
+
+}
