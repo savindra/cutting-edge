@@ -14,6 +14,8 @@ import com.parse.GetDataCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -180,6 +182,7 @@ public class ViewResponseItem extends ActionBarActivity {
 				
 			}
 		});
+		
 	}
 	
 	public void addPoints(ParseUser user){
@@ -193,12 +196,25 @@ public class ViewResponseItem extends ActionBarActivity {
 					object.increment("points", 10);
 					object.saveEventually();
 					displayToast("This response accepted successfully.");
+					sendPushNotification();
 				}else{
 					Log.d(TAG, e.getMessage());
 				}
 				
 			}
 		});
+	}
+	
+	public void sendPushNotification(){
+		ParseQuery pushQuery = ParseInstallation.getQuery();
+		pushQuery.whereEqualTo("user", response.getCreatedBy());
+		
+		ParsePush push = new ParsePush();
+		push.setQuery(pushQuery);
+		push.setMessage(ParseUser.getCurrentUser().getString("name") + " accepted your response as correct and you "
+				+ "were awarded 10 points.");
+		push.sendInBackground();
+		
 	}
 	
 	private void reject(){

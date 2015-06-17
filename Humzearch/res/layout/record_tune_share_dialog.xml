@@ -31,8 +31,10 @@
     <Spinner
         android:id="@+id/spinnerRecordTuneShareLang"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:entries="@array/language_array"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:entries="@array/language_array" />
 
     <TextView
         android:id="@+id/txtViewResponseItemArtist"
@@ -44,8 +46,10 @@
     <Spinner
         android:id="@+id/spinnerRecordTuneShareCountry"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:entries="@array/countries_array"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:entries="@array/countries_array" />
 
     <TextView
         android:id="@+id/txtViewTuneItemLang"
@@ -65,6 +69,9 @@
         android:id="@+id/btnRecordTuneShareDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/share" />
+        android:text="@string/share"
+        android:background="@drawable/buttonshape"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
 
 </LinearLayout>

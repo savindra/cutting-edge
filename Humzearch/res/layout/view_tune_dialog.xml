@@ -38,6 +38,9 @@
         android:id="@+id/btnViewTuneDialogResponse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/addresponse" />
+        android:text="@string/addresponse"
+        android:background="@drawable/buttonshape" 
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"/>
 
 </LinearLayout>

@@ -13,6 +13,8 @@ import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
+import com.parse.ParseInstallation;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -298,12 +300,24 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 				if(e == null){
 					responseDialog.dismiss();
 					Toast.makeText(responseDialog.getContext(), "Your response recorded. Thank you!", Toast.LENGTH_LONG).show();
+					sendPushNotification();
 				}else{
 					Toast.makeText(responseDialog.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 				}
 				
 			}
 		});
+	}
+	
+	public void sendPushNotification(){
+		ParseQuery pushQuery = ParseInstallation.getQuery();
+		pushQuery.whereEqualTo("user", tuneParse.getCreatedBy());
+		
+		ParsePush push = new ParsePush();
+		push.setQuery(pushQuery);
+		push.setMessage(ParseUser.getCurrentUser().getString("name") + " added a response to your tune.");
+		push.sendInBackground();
+		
 	}
 	
 	

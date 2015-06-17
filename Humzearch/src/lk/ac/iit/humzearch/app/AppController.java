@@ -7,6 +7,7 @@ import lk.ac.iit.humzearch.model.UserData;
 import lk.ac.iit.humzearch.util.LruBitmapCache;
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,7 +16,10 @@ import com.android.volley.toolbox.Volley;
 import com.parse.Parse;
 import com.parse.ParseACL;
 import com.parse.ParseCrashReporting;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 public class AppController extends Application {
 	 
@@ -51,6 +55,20 @@ public class AppController extends Application {
 	    // Optionally enable public read access.
 	    // defaultACL.setPublicReadAccess(true);
 	    ParseACL.setDefaultACL(defaultACL, true);
+	    
+	    //Parse push notification
+	    ParsePush.subscribeInBackground("", new SaveCallback() {
+	    	
+			@Override
+			public void done(ParseException e) {
+				if (e == null) {
+					Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+		    	} else {
+		    		Log.e("com.parse.push", "failed to subscribe for push", e);
+		    	}
+				
+			}
+	    	});
     }
  
     public static synchronized AppController getInstance() {

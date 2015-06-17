@@ -2,6 +2,7 @@ package lk.ac.iit.humzearch;
 
 import java.util.ArrayList;
 
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import lk.ac.iit.humzearch.adapter.NavDrawerListAdapter;
@@ -114,8 +115,16 @@ public class MainMenuActivity extends ActionBarActivity {
         if(savedInstanceState == null){
         	displayView(0);
         }
+        
+        registerDeviceforPush();
 	}
 	
+	private void registerDeviceforPush() {
+		ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+		installation.put("user",ParseUser.getCurrentUser());
+		installation.saveInBackground();
+	}
+
 	private class SlideMenuClickListener implements ListView.OnItemClickListener{
 
 		@Override
