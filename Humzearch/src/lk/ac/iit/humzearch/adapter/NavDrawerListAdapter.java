@@ -2,7 +2,11 @@ package lk.ac.iit.humzearch.adapter;
 
 import java.util.ArrayList;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.NavDrawerItem;
 import android.app.Activity;
 import android.content.Context;
@@ -15,8 +19,13 @@ import android.widget.TextView;
 
 public class NavDrawerListAdapter extends BaseAdapter {
 	
+	public static final int TYPE_USER = 1;
+	public static final int TYPE_MENU = 2;
+	
 	private Context context;
     private ArrayList<NavDrawerItem> navDrawerItems;
+    
+    private ImageLoader imageLoader = AppController.getInstance().getImageLoader();
 
 	public NavDrawerListAdapter(Context context,
 			ArrayList<NavDrawerItem> navDrawerItems) {
@@ -24,6 +33,16 @@ public class NavDrawerListAdapter extends BaseAdapter {
 		this.context = context;
 		this.navDrawerItems = navDrawerItems;
 	}
+	
+	@Override
+    public int getViewTypeCount() {
+        return 7;
+    }
+	
+	@Override
+    public int getItemViewType(int position) {
+        return navDrawerItems.get(position).getType();
+    }
 
 	@Override
 	public int getCount() {
@@ -43,22 +62,49 @@ public class NavDrawerListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
+		ViewHolder viewHolder = null;
+		int listType = getItemViewType(position);
+		
 		if(convertView == null){
-			LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-			convertView = mInflater.inflate(R.layout.main_menu_item, null);
-		}
-		
-		ImageView imgIcon = (ImageView) convertView.findViewById(R.id.mainmenu_item_icon);
-		TextView txtTitle = (TextView) convertView.findViewById(R.id.mainmenu_item_title);
-		TextView txtCount = (TextView) convertView.findViewById(R.id.mainmenu_item_counter);
-		
-		imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
-		txtTitle.setText(navDrawerItems.get(position).getTitle());
-		
-		if(navDrawerItems.get(position).isCounterVisible()){
-			txtCount.setText(navDrawerItems.get(position).getCount());
-		}else {
-			txtCount.setVisibility(View.GONE);
+			
+			if(listType == TYPE_USER){
+				LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.main_menu_user, null);
+				
+				NetworkImageView imgUser = (NetworkImageView) convertView.findViewById(R.id.imgMenuUser);
+				TextView txtName = (TextView) convertView.findViewById(R.id.txtMenuUsername);
+				
+				imgUser.setImageUrl(navDrawerItems.get(position).getImg(), imageLoader);
+				txtName.setText(navDrawerItems.get(position).getTitle());
+				
+				viewHolder = new ViewHolder(txtName, imgUser);
+				
+			}else if(listType == TYPE_MENU){
+				LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+				convertView = mInflater.inflate(R.layout.main_menu_item, null);
+				
+				ImageView imgIcon = (ImageView) convertView.findViewById(R.id.mainmenu_item_icon);
+				TextView txtTitle = (TextView) convertView.findViewById(R.id.mainmenu_item_title);
+				TextView txtCount = (TextView) convertView.findViewById(R.id.mainmenu_item_counter);
+				
+				imgIcon.setImageResource(navDrawerItems.get(position).getIcon());
+				txtTitle.setText(navDrawerItems.get(position).getTitle());
+				
+				viewHolder = new ViewHolder(txtTitle, imgIcon);
+				
+				if(navDrawerItems.get(position).isCounterVisible()){
+					txtCount.setText(navDrawerItems.get(position).getCount());
+					viewHolder.setTxtCount(txtCount);
+				}else {
+					txtCount.setVisibility(View.GONE);
+				}
+				
+				
+			}
+			convertView.setTag(viewHolder);
+			
+		}else{
+			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		
 		return convertView;

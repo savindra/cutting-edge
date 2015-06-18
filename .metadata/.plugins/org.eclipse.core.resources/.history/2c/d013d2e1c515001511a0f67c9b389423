@@ -1,0 +1,26 @@
+package lk.ac.iit.humzearch.adapter;
+
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class ViewHolder {
+	
+	TextView txtTitle;
+	ImageView imgIcon;
+	
+	public TextView getTxtTitle() {
+		return txtTitle;
+	}
+	public void setTxtTitle(TextView txtTitle) {
+		this.txtTitle = txtTitle;
+	}
+	public ImageView getImgIcon() {
+		return imgIcon;
+	}
+	public void setImgIcon(ImageView imgIcon) {
+		this.imgIcon = imgIcon;
+	}
+	
+	
+
+}
