@@ -1,7 +1,0 @@
-package lk.ac.iit.humzearch.model;
-
-import com.parse.ParseObject;
-
-public class TuneParse extends ParseObject {
-
-}

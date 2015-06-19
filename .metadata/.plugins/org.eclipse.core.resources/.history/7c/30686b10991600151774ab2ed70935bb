@@ -1,0 +1,22 @@
+package lk.ac.iit.humzearch.fragment;
+
+import lk.ac.iit.humzearch.R;
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+public class MyAccountFragment extends Fragment {
+	
+	private TextView txtName, txtEmail, txtDateJoined, txtAddress, txtPoints;
+	
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.my_account, container, false);
+		return rootView;
+	}
+
+}

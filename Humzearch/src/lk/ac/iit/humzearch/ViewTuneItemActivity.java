@@ -6,6 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.parse.CountCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -19,11 +21,13 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.Response;
 import lk.ac.iit.humzearch.model.TuneParse;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +48,8 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	private final static String TAG = ViewTuneItemActivity.class.getSimpleName();
 	
 	private TextView txtName, txtArtist, txtLanguage, txtCountry, txtYear;
-	private ParseImageView imgUser;
+	private NetworkImageView imgUser;
+	private ImageLoader imageLoader;
 	private Button btnPlay, btnPause, btnAddRespone;
 	private SeekBar seekBar;
 	private MediaPlayer mMediaplayer;
@@ -58,15 +63,14 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	private Button btnDialogAddResponse;
 	
 	private TuneParse tuneParse = new TuneParse();
-	private ParseFile imgFile, tuneFile;
-	private File mediaFile;
-	
 	private ParseQuery<TuneParse> tuneQuery;
 	private String tuneObjID;
 	int result;
 	int responseCount;
 	
 	private Handler timerHandler;
+	
+	private Intent i;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		getSupportActionBar().setTitle("View Tune");
 		
 		initialize();
+		fillData();
 	}
 	
 
@@ -87,12 +92,14 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		txtLanguage = (TextView) findViewById(R.id.txtViewTuneItemLang);
 		txtCountry = (TextView) findViewById(R.id.txtViewTuneItemCountry);
 		txtYear = (TextView) findViewById(R.id.txtViewTuneItemYear);
-		imgUser = (ParseImageView) findViewById(R.id.imgViewTuneItemUser);
+		imgUser = (NetworkImageView) findViewById(R.id.imgViewTuneItemUser);
+		imageLoader = AppController.getInstance().getImageLoader();
 		btnPlay = (Button) findViewById(R.id.btnViewTuneItemPlay);
 		btnPause = (Button) findViewById(R.id.btnViewTuneItemPause);
 		btnAddRespone = (Button) findViewById(R.id.btnViewTuneResponse);
 		seekBar = (SeekBar) findViewById(R.id.seekBarViewTuneItem);
 		timerHandler = new Handler();
+		i = getIntent();
 		
 		btnAddRespone.setOnClickListener(new OnClickListener() {
 			@Override
@@ -119,10 +126,48 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 			}
 		});
 		
-		downloadData();
+	}
+	
+	// Get tune data from previous activity
+	private void fillData(){
 		
+		imgUser.setImageUrl(i.getStringExtra("image"), imageLoader);
+		txtName.setText(i.getStringExtra("name"));
+		txtArtist.setText(testText(i.getStringExtra("tune_artist")));
+		txtLanguage.setText(testText(i.getStringExtra("tune_lang")));
+		txtCountry.setText(testText(i.getStringExtra("tune_country")));
+		txtYear.setText(testText(i.getStringExtra("tune_year")));
+		
+		mMediaplayer = new MediaPlayer();
+		mMediaplayer = MediaPlayer.create(this, Uri.parse(i.getStringExtra("tune_url")));
+		
+		downloadData();
+	}
+	
+	// Download a copy of tune object from cloud via object id
+	private void downloadData() {
+		progressDialog = ProgressDialog.show(this, "", "Loading...", true);
+		
+		tuneObjID = i.getStringExtra("tuneParseID");
+		
+		tuneQuery = ParseQuery.getQuery("Tune");
+		tuneQuery.whereEqualTo("objectId", tuneObjID);
+		tuneQuery.include("createdBy");
+		tuneQuery.getFirstInBackground(new GetCallback<TuneParse>() {
+			
+			@Override
+			public void done(TuneParse tune, ParseException e) {
+				progressDialog.dismiss();
+				if(e == null){
+					tuneParse = tune;
+				}else{
+					Log.d(TAG, e.getMessage());
+				}
+			}
+		});
 	}
 
+	// Mediaplayer controllers
 	private void play() {
 		isPlaying = true;
 		seekBar.setMax((int) mMediaplayer.getDuration());
@@ -148,83 +193,8 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 				timerHandler.postDelayed(this, 100);
 			}
 		}
-	};
-
-	private void downloadData() {
-		progressDialog = ProgressDialog.show(this, "", "Loading...", true);
-		
-		tuneObjID = getIntent().getStringExtra("tuneParseID");
-		
-		tuneQuery = ParseQuery.getQuery("Tune");
-		tuneQuery.whereEqualTo("objectId", tuneObjID);
-		tuneQuery.include("createdBy");
-		tuneQuery.getFirstInBackground(new GetCallback<TuneParse>() {
-			
-			@Override
-			public void done(TuneParse tune, ParseException e) {
-				if(e == null){
-					tuneParse = tune;
-					fillData(tuneParse);
-				}else{
-					progressDialog.dismiss();
-					Log.d(TAG, e.getMessage());
-				}
-			}
-		});
-		
-	}
-	
-	private void fillData(TuneParse tune){
-		
-		txtName.setText(tune.getCreatedBy().getString("name"));
-		getSupportActionBar().setTitle("View Tune - " + txtName.getText().toString());
-		txtArtist.setText(tune.getArtist());
-		txtLanguage.setText(tune.getLanguage());
-		txtCountry.setText(tune.getCountry());
-		txtYear.setText(tune.getYear());
-		
-		imgFile = tune.getCreatedBy().getParseFile("image");
-		if(imgFile != null){
-			imgUser.setParseFile(imgFile);
-			imgUser.loadInBackground();
-		}
-		
-		tuneFile = tune.getParseFile("tune");
-		tuneFile.getDataInBackground(new GetDataCallback() {
-			
-			@Override
-			public void done(byte[] data, ParseException e) {
-				progressDialog.dismiss();
-				if(e == null){
-					byteToFile(data);
-					initializeMediaPlayer();
-				}else{
-					Log.d(TAG, e.getMessage());
-				}
-			}
-		});
-		
-		
-	}
-	
-	private void initializeMediaPlayer() {
-		mMediaplayer = new MediaPlayer();
-		mMediaplayer = MediaPlayer.create(this, Uri.fromFile(mediaFile));	
-	}
-
-	public void byteToFile(byte[] data){
-		mediaFile = new File(getOutputMediaFileUri());
-		
-		try {
-			FileOutputStream fileOuputStream =  new FileOutputStream(mediaFile);
-			fileOuputStream.write(data);
-			fileOuputStream.close();
-			
-		} catch (Exception e) {
-			Log.d(TAG, e.getMessage());
-		}
-	}
-		
+	};	
+	// Mediaplayer controllers
 	
 	private void addResponse() {
 		
@@ -242,7 +212,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				if(!validateDialog()){
-					displayToast(responseDialog.getContext(), "Please enter title or artist.");
+					displayToast(responseDialog.getContext(), "Please enter title and artist.");
 				
 				}else if(tuneParse.getCreatedBy().getUsername().equalsIgnoreCase(ParseUser.getCurrentUser().getUsername())){
 					displayToast(responseDialog.getContext(), "You cannot add response to your tune.");
@@ -273,6 +243,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 				}else{
 					progressDialog.dismiss();
 					displayToast(responseDialog.getContext(), e.getMessage());
+					Log.d(TAG, e.getMessage());
 				}
 				
 			}
@@ -320,8 +291,6 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		
 	}
 	
-	
-	
 	public boolean validateDialog(){
 		String title = txtDialogTitle.getText().toString();
 		String artist = txtDialogArtist.getText().toString();
@@ -332,36 +301,15 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		return true;
 	}
 	
-	public String getOutputMediaFileUri() {
-        return (getOutputMediaFile()).getAbsolutePath();
-    }
-	
-	private static File getOutputMediaFile(){
-		File mediaStorageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), "/humzearch");
-		
-		// Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "Oops! Failed create "
-                        + "humzearch" + " directory");
-                return null;
-            }
-        }
-        
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir + File.separator + "audio-temp.mp3");
-        try {
-			mediaFile.createNewFile();
-			Log.d(TAG, "file created.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-        return mediaFile;
-	}
-	
 	public void displayToast(Context context, String message){
 		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+	}
+	
+	private String testText(String text){
+		if(text == null)
+			return "Not Entered";
+		else
+			return text;
 	}
 
 }

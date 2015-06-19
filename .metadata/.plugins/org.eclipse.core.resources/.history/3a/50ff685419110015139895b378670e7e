@@ -1,9 +1,0 @@
-package lk.ac.iit.humzearch.model;
-
-import com.parse.ParseClassName;
-import com.parse.ParseObject;
-
-@ParseClassName("Tune")
-public class TuneParse extends ParseObject {
-
-}

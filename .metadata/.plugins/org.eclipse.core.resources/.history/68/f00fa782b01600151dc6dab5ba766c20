@@ -1,0 +1,68 @@
+package lk.ac.iit.humzearch.adapter;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+
+import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.app.AppController;
+import lk.ac.iit.humzearch.model.Tune;
+import lk.ac.iit.humzearch.model.TuneParse;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
+
+public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
+	
+	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
+
+	public ViewTunesAdapter(Context context) {
+		
+		super(context, new ParseQueryAdapter.QueryFactory<TuneParse>() {
+			public ParseQuery create() {
+				ParseQuery<TuneParse> query = ParseQuery.getQuery("Tune");
+				query.whereEqualTo("status", "pending");
+				query.include("createdBy");
+				query.addDescendingOrder("createdAt");
+				return query;
+			}
+		});
+	}
+
+	@Override
+	public View getItemView(TuneParse object, View v, ViewGroup parent) {
+		if(v == null){
+			v = v.inflate(getContext(), R.layout.view_tune_row, null);
+		}
+		super.getItemView(object, v, parent);
+		
+		NetworkImageView imgUser = (NetworkImageView) v.findViewById(R.id.imgViewTuneUser);
+		String imgUrl = object.getCreatedBy().getParseFile("image").getUrl();
+		imgUser.setImageUrl(imgUrl, imageLoader);
+		
+		TextView txtName = (TextView) v.findViewById(R.id.txtViewTuneUsername);
+		txtName.setText(object.getCreatedBy().getString("name"));
+		
+		TextView txtTag = (TextView) v.findViewById(R.id.txtViewTuneTag);
+		String tags = "TAGS: " + object.getArtist() +" "+ object.getLanguage()
+				+" "+ object.getCountry() +" "+ object.getYear();
+		txtTag.setText(tags);
+		
+		SimpleDateFormat f = new SimpleDateFormat("dd b 'at' hh.mm.ss");
+		TextView txtDate = (TextView) v.findViewById(R.id.txtViewTuneDate);
+		txtDate.setText(f.format(object.getCreatedAt()));
+		
+		return v;
+	}
+	
+}

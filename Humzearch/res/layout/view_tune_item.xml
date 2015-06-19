@@ -9,7 +9,7 @@
     android:background="@color/background"
     android:orientation="vertical" >
 
-    <com.parse.ParseImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/imgViewTuneItemUser"
         android:layout_width="100dp"
         android:layout_height="100dp"

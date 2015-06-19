@@ -301,10 +301,10 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 		pTuneACL.setPublicReadAccess(true);
 		pTune.setACL(pTuneACL);
 		pTune.setCreatedBy(ParseUser.getCurrentUser());
-		pTune.setArtist(txtArtist.getText().toString());
-		pTune.setLanguage(String.valueOf(language.getSelectedItem()));
-		pTune.setCountry(String.valueOf(country.getSelectedItem()));
-		pTune.setYear(txtYear.getText().toString());
+		pTune.setArtist(testInput(txtArtist.getText().toString()));
+		pTune.setLanguage(testInput(String.valueOf(language.getSelectedItem())));
+		pTune.setCountry(testInput(String.valueOf(country.getSelectedItem())));
+		pTune.setYear(testInput(txtYear.getText().toString()));
 		pTune.setStatus("pending");
 		pTune.setTuneFile(tuneFile);
 		
@@ -353,6 +353,13 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 				
 			}
 		});
+	}
+	
+	public String testInput(String text){
+		if(text.equalsIgnoreCase("-- Not Selected --"))
+			return "";
+		else
+			return text;
 	}
 	
 

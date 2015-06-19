@@ -6,6 +6,7 @@ import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import lk.ac.iit.humzearch.adapter.NavDrawerListAdapter;
+import lk.ac.iit.humzearch.fragment.MyAccountFragment;
 import lk.ac.iit.humzearch.fragment.RecordTuneFragment;
 import lk.ac.iit.humzearch.fragment.ViewResponseFragment;
 import lk.ac.iit.humzearch.fragment.ViewRewardsFragment;
@@ -52,6 +53,8 @@ public class MainMenuActivity extends ActionBarActivity {
     private NavDrawerListAdapter adapter;
     
     private ParseUser user;
+    private Fragment currentFragment;
+    private int currentPosition;
 
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
@@ -81,11 +84,9 @@ public class MainMenuActivity extends ActionBarActivity {
         // Photos
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(2, -1), NavDrawerListAdapter.TYPE_MENU));
         // Communities, Will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1), NavDrawerListAdapter.TYPE_MENU, true, "22"));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(3, -1), NavDrawerListAdapter.TYPE_MENU, true, "10"));
         // Pages
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(4, -1), NavDrawerListAdapter.TYPE_MENU));
-        // What's hot, We  will add a counter here
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(5, -1), NavDrawerListAdapter.TYPE_MENU, true, "50+"));
         
         navMenuIcons.recycle();
         
@@ -146,26 +147,38 @@ public class MainMenuActivity extends ActionBarActivity {
 	
 	private void displayView(int position){
 		Fragment fragment = null;
-		switch(position){
-		case 0:
-			break;
-		case 1:
-			fragment = new RecordTuneFragment();
-			break;
-		case 2:
-			fragment = new ViewTuneFragment();
-			break;
-		case 3:
-			fragment = new ViewResponseFragment();
-			break;
-		case 4:
-			fragment = new ViewRewardsFragment();
-			break;
-		default:
-			break;
+		if(position == 0){
+			if(currentFragment == null){
+				fragment = new RecordTuneFragment();
+				position = 1;
+			}else{
+				fragment = currentFragment;
+				position = currentPosition;
+			}
+		}else{
+			switch(position){
+			case 1:
+				fragment = new RecordTuneFragment();
+				break;
+			case 2:
+				fragment = new ViewTuneFragment();
+				break;
+			case 3:
+				fragment = new ViewResponseFragment();
+				break;
+			case 4:
+				fragment = new ViewRewardsFragment();
+				break;
+			case 5:
+				fragment = new MyAccountFragment();
+			default:
+				break;
+			}
 		}
 		
 		if (fragment != null) {
+			currentFragment = fragment;
+			currentPosition = position;
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.mainmenu_frame_container, fragment).commit();

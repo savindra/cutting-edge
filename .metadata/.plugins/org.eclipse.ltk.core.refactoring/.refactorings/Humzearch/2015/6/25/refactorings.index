@@ -33,3 +33,14 @@
 1434633417368	Change Layout
 1434636343677	Rename field 'imageView1'
 1434636380776	Rename field 'textView1'
+1434708150836	Change Layout
+1434727330483	Extracts string 'null' into R.string.redeemitems
+1434727358629	Extracts string 'null' into R.string.pointsbalance
+1434727380946	Extracts string 'null' into R.string.address
+1434727418075	Extracts string 'null' into R.string.datejoined
+1434727736712	Rename field 'imageView1'
+1434727770324	Rename field 'textView1'
+1434727785797	Rename field 'textView2'
+1434727810228	Rename field 'textView4'
+1434727829334	Rename field 'textView6'
+1434727848783	Rename field 'textView8'

@@ -64,10 +64,17 @@ public class ViewTuneFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				TuneParse t = adapter.getItem(position);
-				String objID = t.getObjectId();
 				
 				Intent intent = new Intent(getActivity(), ViewTuneItemActivity.class);
-				intent.putExtra("tuneParseID", objID);
+				intent.putExtra("tuneParseID", t.getObjectId());
+				intent.putExtra("name", t.getCreatedBy().getString("name"));
+				intent.putExtra("image", t.getCreatedBy().getParseFile("image").getUrl());
+				intent.putExtra("tune_artist", t.getArtist());
+				intent.putExtra("tune_lang", t.getLanguage());
+				intent.putExtra("tune_country", t.getCountry());
+				intent.putExtra("tune_year", t.getYear());
+				intent.putExtra("tune_url", t.getTuneFile().getUrl());
+				
 				startActivity(intent);
 			}
 		});

@@ -22,7 +22,6 @@
         <item >View Tunes</item>
         <item >View Responses</item>
         <item >Rewards</item>
-        <item >Messages</item>
         <item >My Account</item>
     </string-array>
     
@@ -32,7 +31,6 @@
         <item>@drawable/ic_viewtune</item>
         <item>@drawable/ic_viewresponse</item>
         <item>@drawable/ic_reward</item>
-        <item>@drawable/ic_messages</item>
         <item>@drawable/ic_myaccount</item>
     </array>
     
@@ -320,5 +318,9 @@
 	    <string name="accept">Accept</string>
 	    <string name="reject">REJECT</string>
 	    <string name="redeem">REDEEM</string>
+	    <string name="redeemitems">Redeemed Items</string>
+	    <string name="pointsbalance">Points Balance</string>
+	    <string name="address">Address</string>
+	    <string name="datejoined">Date Joined</string>
 
 </resources>

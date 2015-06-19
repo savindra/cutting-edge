@@ -1,5 +1,6 @@
 package lk.ac.iit.humzearch.adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import lk.ac.iit.humzearch.R;
@@ -56,6 +57,10 @@ public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
 		String tags = "TAGS: " + object.getArtist() +" "+ object.getLanguage()
 				+" "+ object.getCountry() +" "+ object.getYear();
 		txtTag.setText(tags);
+		
+		SimpleDateFormat f = new SimpleDateFormat("dd MMMM 'at' HH:mm");
+		TextView txtDate = (TextView) v.findViewById(R.id.txtViewTuneDate);
+		txtDate.setText(f.format(object.getCreatedAt()));
 		
 		return v;
 	}

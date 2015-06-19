@@ -1,5 +1,7 @@
 package lk.ac.iit.humzearch.adapter;
 
+import java.text.SimpleDateFormat;
+
 import lk.ac.iit.humzearch.R;
 import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.Response;
@@ -56,6 +58,11 @@ public class ViewResponseAdapter extends ParseQueryAdapter<Response> {
 		
 		String message = "<b>" + object.getCreatedBy().getString("name") + "</b>" + " added a response to your tune.";
 		txtMessage.setText(Html.fromHtml(message));
+		
+		SimpleDateFormat f = new SimpleDateFormat("dd MMMM 'at' HH:mm");
+		TextView txtDate = (TextView) v.findViewById(R.id.txtViewResponseItemDate);
+		txtDate.setText(f.format(object.getCreatedAt()));
+		
 		return v;
 	}
 	

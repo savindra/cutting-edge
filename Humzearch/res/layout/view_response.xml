@@ -8,8 +8,10 @@
     <ListView
         android:id="@+id/listViewResponse"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip" />
+        android:layout_height="match_parent"
+        android:divider="@color/list_divider"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector" />
     
 
 </LinearLayout>

@@ -1,0 +1,7 @@
+package lk.ac.iit.humzearch.fragment;
+
+import android.app.Fragment;
+
+public class MyAccountFragment extends Fragment {
+
+}

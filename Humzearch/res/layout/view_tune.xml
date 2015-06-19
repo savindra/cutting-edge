@@ -34,7 +34,10 @@
     <ListView
         android:id="@+id/listViewTune"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dip"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector"
+        android:divider="@color/list_divider" />
 
 </RelativeLayout>

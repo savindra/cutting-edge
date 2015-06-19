@@ -9,7 +9,8 @@
         android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:src="@drawable/ic_default_user" />
 
@@ -23,7 +24,8 @@
         android:layout_toLeftOf="@+id/imgViewResponseItemUser"
         android:layout_toRightOf="@+id/imgViewResponseUser"
         android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/large" />
 
     <ImageView
         android:id="@+id/imgViewResponseItemUser"
@@ -33,5 +35,15 @@
         android:layout_alignTop="@+id/txtViewResponse"
         android:layout_marginRight="5dp"
         android:src="@drawable/ic_right_arrow" />
+
+    <TextView
+        android:id="@+id/txtViewResponseItemDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgViewResponseUser"
+        android:layout_alignRight="@+id/imgViewResponseItemUser"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:textSize="@dimen/small"/>
 
 </RelativeLayout>

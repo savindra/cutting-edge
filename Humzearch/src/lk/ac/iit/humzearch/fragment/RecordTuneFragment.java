@@ -16,13 +16,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.app.Fragment;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -31,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordListener {
 	
@@ -112,7 +106,6 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 	}
 	
 	public void searchTuneAPI(){
-		//Toast.makeText(getActivity(), "hi", Toast.LENGTH_LONG).show();
 		new UploadTune(getActivity(), outputFile).execute();
 	}
 	
