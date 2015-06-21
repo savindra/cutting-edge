@@ -12,6 +12,7 @@ public class Tune {
 	private String img = "";
 	private String url = "";
 	private Date date_added;
+	private String year;
 	
 	public Tune() {
 		super();
@@ -81,16 +82,20 @@ public class Tune {
 		this.date_added = date_added;
 	}
 
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
 	@Override
 	public String toString() {
 		return "Tune [tuneID=" + tuneID + ", title=" + title + ", artist="
 				+ artist + ", album=" + album + ", country=" + country
 				+ ", img=" + img + ", url=" + url + ", date_added="
-				+ date_added + "]";
+				+ date_added + ", year=" + year + "]";
 	}
 	
-	
-	
-	
-
 }

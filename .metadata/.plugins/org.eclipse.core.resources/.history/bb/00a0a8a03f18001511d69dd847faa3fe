@@ -1,0 +1,121 @@
+package lk.ac.iit.humzearch.fragment;
+
+import java.util.List;
+
+import com.parse.ParseQueryAdapter.OnQueryLoadListener;
+import com.parse.ParseUser;
+
+import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.ViewTuneItemActivity;
+import lk.ac.iit.humzearch.adapter.ViewTunesAdapter;
+import lk.ac.iit.humzearch.model.TuneParse;
+import android.os.Bundle;
+import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+
+public class ViewTuneFragment extends Fragment {
+	
+	private static final int ALL_TUNES = 1;
+	private static final int MY_TUNES = 2;
+	
+	private ViewTunesAdapter adapter;
+	private ListView listView;
+	private ProgressDialog progressDialog;
+	private LinearLayout btnAll, btnMy;
+	
+	public ViewTuneFragment(){}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.view_tune, container, false);
+		intialize(rootView);
+		return rootView;
+	}
+	
+	private void intialize(View rootView){
+		listView = (ListView) rootView.findViewById(R.id.listViewTune);
+		btnAll = (LinearLayout) rootView.findViewById(R.id.btnViewTuneAll);
+		btnMy = (LinearLayout) rootView.findViewById(R.id.btnViewTuneMy);
+		
+		btnAll.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				populateList(ALL_TUNES);
+			}
+		});
+		
+		btnMy.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				populateList(MY_TUNES);
+			}
+		});
+		
+		adapter.addOnQueryLoadListener(new OnQueryLoadListener<TuneParse>() {
+
+			@Override
+			public void onLoaded(List<TuneParse> objects, Exception e) {
+				 progressDialog.dismiss();
+			}
+
+			@Override
+			public void onLoading() {
+				if(progressDialog == null)
+					progressDialog = ProgressDialog.show(getActivity(), "", "Loading...", true);
+			}
+		});
+		
+	}
+	
+	private void populateList(int type){
+		switch(type){
+		case 1:
+			adapter = new ViewTunesAdapter(getActivity());
+		case 2:
+			adapter = new ViewTunesAdapter(getActivity(), ParseUser.getCurrentUser());
+		default:
+			adapter = new ViewTunesAdapter(getActivity());
+		}
+		
+		listView.setAdapter(adapter);
+		
+		adapter.loadObjects();
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				TuneParse t = adapter.getItem(position);
+				
+				Intent intent = new Intent(getActivity(), ViewTuneItemActivity.class);
+				intent.putExtra("tuneParseID", t.getObjectId());
+				intent.putExtra("name", t.getCreatedBy().getString("name"));
+				intent.putExtra("image", t.getCreatedBy().getParseFile("image").getUrl());
+				intent.putExtra("tune_artist", t.getArtist());
+				intent.putExtra("tune_lang", t.getLanguage());
+				intent.putExtra("tune_country", t.getCountry());
+				intent.putExtra("tune_year", t.getYear());
+				intent.putExtra("tune_url", t.getTuneFile().getUrl());
+				
+				startActivity(intent);
+			}
+		});
+		
+		adapter.notifyDataSetChanged();
+	}
+
+}

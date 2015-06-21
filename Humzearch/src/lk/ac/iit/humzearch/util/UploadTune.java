@@ -83,7 +83,6 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 		super();
 		this.context = context;
 		this.tuneFile = "/storage/emulated/0/Download/test.mp3";
-;
 		tune = new Tune();
 	}
 
@@ -129,6 +128,7 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 						tune.setImg(t.getString("artworkUrl100"));
 						tune.setCountry(t.getString("country"));
 						tune.setUrl(t.getString("previewUrl"));
+						tune.setYear(t.getString("releaseDate").substring(0,4));
 					}
 					
 					result = "success";
@@ -150,7 +150,6 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 	}
 	
 	public String getArtwork(){
-		StringBuilder sb = new StringBuilder();
 		JSONObject json = null;
 		String artist;
 		if(tune.getArtist().equalsIgnoreCase("various artists")){
@@ -232,6 +231,8 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 			intent.putExtra("tune_album", tune.getAlbum());
 			intent.putExtra("tune_country", tune.getCountry());
 			intent.putExtra("tune_url", tune.getUrl());
+			intent.putExtra("tune_year", tune.getYear());
+			intent.putExtra("tune_file", tuneFile);
 			context.startActivity(intent);
 			
 		}else if(result.equalsIgnoreCase("No internet connectivity")){

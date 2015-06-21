@@ -3,6 +3,7 @@ package lk.ac.iit.humzearch.fragment;
 import java.util.List;
 
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
+import com.parse.ParseUser;
 
 import lk.ac.iit.humzearch.R;
 import lk.ac.iit.humzearch.ViewTuneItemActivity;
@@ -14,17 +15,23 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class ViewTuneFragment extends Fragment {
 	
+	private static final int ALL_TUNES = 1;
+	private static final int MY_TUNES = 2;
+	
 	private ViewTunesAdapter adapter;
 	private ListView listView;
 	private ProgressDialog progressDialog;
+	private LinearLayout btnAll, btnMy;
 	
 	public ViewTuneFragment(){}
 	
@@ -37,8 +44,40 @@ public class ViewTuneFragment extends Fragment {
 	}
 	
 	private void intialize(View rootView){
-		adapter = new ViewTunesAdapter(getActivity());
-		adapter.setPaginationEnabled(true);
+		listView = (ListView) rootView.findViewById(R.id.listViewTune);
+		btnAll = (LinearLayout) rootView.findViewById(R.id.btnViewTuneAll);
+		btnMy = (LinearLayout) rootView.findViewById(R.id.btnViewTuneMy);
+		
+		populateList(ALL_TUNES);
+		
+		btnAll.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				populateList(ALL_TUNES);
+			}
+		});
+		
+		btnMy.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				populateList(MY_TUNES);
+			}
+		});
+		
+	}
+	
+	private void populateList(int type){
+		
+		switch(type){
+		case 1:
+			adapter = new ViewTunesAdapter(getActivity());
+		case 2:
+			adapter = new ViewTunesAdapter(getActivity(), ParseUser.getCurrentUser());
+		default:
+			adapter = new ViewTunesAdapter(getActivity());
+		}
 		adapter.addOnQueryLoadListener(new OnQueryLoadListener<TuneParse>() {
 
 			@Override
@@ -53,7 +92,6 @@ public class ViewTuneFragment extends Fragment {
 			}
 		});
 		
-		listView = (ListView) rootView.findViewById(R.id.listViewTune);
 		listView.setAdapter(adapter);
 		
 		adapter.loadObjects();

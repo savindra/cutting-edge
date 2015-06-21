@@ -8,6 +8,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import lk.ac.iit.humzearch.R;
+import lk.ac.iit.humzearch.adapter.MyAccountRewardAdapter;
 import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.UserData;
 import android.app.Fragment;
@@ -24,6 +25,7 @@ public class MyAccountFragment extends Fragment {
 	private NetworkImageView imgUser;
 	private ImageLoader imageLoader;
 	private ListView listView;
+	private MyAccountRewardAdapter adapter;
 	
 	private ParseUser user;
 
@@ -47,6 +49,7 @@ public class MyAccountFragment extends Fragment {
 		imageLoader = AppController.getInstance().getImageLoader();
 		listView = (ListView) rootView.findViewById(R.id.listMyAccountReward);
 		user = ParseUser.getCurrentUser();
+		adapter = new MyAccountRewardAdapter(getActivity());
 		
 	}
 	
@@ -73,6 +76,10 @@ public class MyAccountFragment extends Fragment {
 				}
 			}
 		});
+		
+		adapter.loadObjects();
+		listView.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
 		
 		
 	}

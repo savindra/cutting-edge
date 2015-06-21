@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename field &apos;txtTuneResultCountry&apos; in &apos;lk.ac.iit.humzearch.R.id&apos; to &apos;txtTuneResultYear&apos;&#x0D;&#x0A;- Original project: &apos;Humzearch&apos;&#x0D;&#x0A;- Original element: &apos;lk.ac.iit.humzearch.R.id.txtTuneResultCountry&apos;&#x0D;&#x0A;- Renamed element: &apos;lk.ac.iit.humzearch.R.id.txtTuneResultYear&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" delegate="false" deprecate="true" description="Rename field &apos;txtTuneResultCountry&apos;" flags="589830" getter="false" id="org.eclipse.jdt.ui.rename.field" input="/gen&lt;lk.ac.iit.humzearch{R.java[R[id^txtTuneResultCountry" name="txtTuneResultYear" references="true" setter="false" stamp="1434869900267" textual="false" version="1.0"/>
+</session>

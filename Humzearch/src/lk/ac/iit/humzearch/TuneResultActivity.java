@@ -1,11 +1,21 @@
 package lk.ac.iit.humzearch;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import lk.ac.iit.humzearch.app.AppController;
+import lk.ac.iit.humzearch.model.TuneParse;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.parse.ParseACL;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.media.AudioManager;
@@ -25,6 +35,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,14 +43,15 @@ public class TuneResultActivity extends ActionBarActivity {
 	
 	private final String TAG = TuneResultActivity.class.getSimpleName();
 	
-	private TextView txtTitle, txtArtist, txtAlbum, txtCountry, txtPlayPreview;
+	private TextView txtTitle, txtArtist, txtAlbum, txtYear, txtPlayPreview, txtDialogArtist, txtDialogYear ;
 	private NetworkImageView imgArtwork;
 	private final String DEFAULT_ARTWORK = "http://i.imgur.com/ST7k1qw.jpg";
 	ImageLoader imageLoader = AppController.getInstance().getImageLoader();
-	private Dialog previewDialog;
+	private Dialog previewDialog, dialog;
+	private ProgressDialog progressDialog;
 	
 	private MediaPlayer mMediaplayer;
-	private Button btnPlay,btnStop;
+	private Button btnPlay,btnStop, btnShare, btnDialogShare;
 	private SeekBar seekBar;
 	private TextView txtTimer;
 	private double timeElapsed = 0;
@@ -47,6 +59,9 @@ public class TuneResultActivity extends ActionBarActivity {
 	
 	private Handler timerHandler;
 	private boolean isPlaying = false;;
+	
+	private Spinner dialogCountry, dialogLanguage;
+	private Bundle extras;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,16 +73,24 @@ public class TuneResultActivity extends ActionBarActivity {
 		txtTitle = (TextView) findViewById(R.id.txtTuneResultName);
 		txtArtist = (TextView) findViewById(R.id.txtTuneResultArtist);
 		txtAlbum = (TextView) findViewById(R.id.txtTuneResultAlbum);
-		txtCountry = (TextView) findViewById(R.id.txtTuneResultCountry);
+		txtYear = (TextView) findViewById(R.id.txtTuneResultYear);
 		imgArtwork = (NetworkImageView) findViewById(R.id.imgTuneResultCover);
 		txtPlayPreview = (TextView) findViewById(R.id.txtRecordTuneResultPlayPreview);
+		btnShare = (Button) findViewById(R.id.btnTuneResultShare);
 		txtPlayPreview.setMovementMethod(LinkMovementMethod.getInstance());
 		
+		btnShare.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ShareToCommunity();
+			}
+		} );
 		filData();
 	}
 
 	public void filData(){
-		Bundle extras = getIntent().getExtras();
+		extras = getIntent().getExtras();
 		if( extras != null ){
 			
 			String imgUrl = extras.getString("tune_img");
@@ -82,7 +105,7 @@ public class TuneResultActivity extends ActionBarActivity {
 			txtTitle.setText(spanUnderline);
 			txtArtist.setText(extras.getString("tune_artist"));
 			txtAlbum.setText(extras.getString("tune_album"));
-			txtCountry.setText(extras.getString("tune_country"));
+			txtYear.setText(extras.getString("tune_year"));
 			
 			final String url = extras.getString("tune_url");
 			txtPlayPreview.setOnClickListener(new OnClickListener() {
@@ -171,6 +194,99 @@ public class TuneResultActivity extends ActionBarActivity {
 			
 		}
 	};
+	
+	
+	// Share with community
+	public void ShareToCommunity(){
+		
+		dialog = new Dialog(this);
+		dialog.setContentView(R.layout.record_tune_share_dialog);
+		dialog.setTitle("Share with Community");
+		
+		txtDialogArtist = (TextView) dialog.findViewById(R.id.txtRecordTuneShareArtist);
+		dialogLanguage = (Spinner) dialog.findViewById(R.id.spinnerRecordTuneShareLang);
+		dialogCountry = (Spinner) dialog.findViewById(R.id.spinnerRecordTuneShareCountry);
+		txtDialogYear = (TextView) dialog.findViewById(R.id.txtRecordTuneShareYear);
+		btnDialogShare = (Button) dialog.findViewById(R.id.btnRecordTuneShareDialog);
+		
+		dialog.show();
+		
+		btnDialogShare.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				uploadTune();
+				dialog.dismiss();
+			}
+		});
+	}
+	
+	public void saveTuneObj(ParseFile tuneFile){
+		TuneParse pTune = new TuneParse();
+		ParseACL pTuneACL = new ParseACL(ParseUser.getCurrentUser());
+		pTuneACL.setPublicReadAccess(true);
+		pTune.setACL(pTuneACL);
+		pTune.setCreatedBy(ParseUser.getCurrentUser());
+		pTune.setArtist(testInput(txtDialogArtist.getText().toString()));
+		pTune.setLanguage(testInput(String.valueOf(dialogLanguage.getSelectedItem())));
+		pTune.setCountry(testInput(String.valueOf(dialogCountry.getSelectedItem())));
+		pTune.setYear(testInput(txtDialogYear.getText().toString()));
+		pTune.setStatus("pending");
+		pTune.setTuneFile(tuneFile);
+		
+		pTune.saveEventually(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				progressDialog.hide();
+				if(e == null){
+					Toast.makeText(TuneResultActivity.this, "Your tune uploaded succesfully.", Toast.LENGTH_LONG).show();
+				}else{
+					Toast.makeText(TuneResultActivity.this, "Tune upload failed", Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+		
+	}
+	
+	public void uploadTune(){
+		progressDialog = ProgressDialog.show(this, "", "Uploading...", true);
+		FileInputStream fileInputStream = null;
+		File file = new File(extras.getString("tune_file"));
+		
+		byte[] bFile = new byte[(int) file.length()];
+		
+		try{
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(bFile);
+			fileInputStream.close();
+			
+		}catch(Exception e){
+			Log.d(TAG, e.toString());
+		}
+		
+		final ParseFile pFile = new ParseFile("audio.mp3", bFile);
+		pFile.saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException e) {
+				if(e == null){
+					saveTuneObj(pFile);
+				}else{
+					progressDialog.hide();
+					Toast.makeText(TuneResultActivity.this, "File upload failed", Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
+	}
+	
+	public String testInput(String text){
+		if(text.equalsIgnoreCase("-- Not Selected --"))
+			return "";
+		else
+			return text;
+	}
 	
 	
 	

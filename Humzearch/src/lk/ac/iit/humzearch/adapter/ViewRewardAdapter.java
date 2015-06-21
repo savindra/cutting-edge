@@ -42,7 +42,7 @@ public class ViewRewardAdapter extends ParseQueryAdapter<Reward> {
 		}
 		super.getItemView(object, v, parent);
 		
-		NetworkImageView imgReward = (NetworkImageView) v.findViewById(R.id.imgViewReward);
+		NetworkImageView imgReward = (NetworkImageView) v.findViewById(R.id.imgMyAccountReward);
 		String imgUrl = object.getParseFile("image").getUrl();
 		imgReward.setImageUrl(imgUrl, imageLoader);
 		

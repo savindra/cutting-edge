@@ -1,0 +1,27 @@
+package lk.ac.iit.humzearch.adapter;
+
+import lk.ac.iit.humzearch.model.Response;
+import lk.ac.iit.humzearch.model.Reward;
+import android.content.Context;
+
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
+
+public class MyAccountRewardAdapter extends ParseQueryAdapter<ParseObject> {
+
+	public MyAccountRewardAdapter(Context context) {
+		super(context, new ParseQueryAdapter.QueryFactory<ParseObject>() {
+
+			@Override
+			public ParseQuery<ParseObject> create() {
+				ParseQuery<ParseObject> query = ParseQuery.getQuery("UserReward");
+				query.whereEqualTo("createdBy", ParseUser.getCurrentUser());
+				query.include("reward");
+				return query;
+			}
+		});
+	}
+
+}

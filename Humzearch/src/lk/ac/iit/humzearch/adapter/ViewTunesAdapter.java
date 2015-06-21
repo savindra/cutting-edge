@@ -38,6 +38,20 @@ public class ViewTunesAdapter extends ParseQueryAdapter<TuneParse> {
 			}
 		});
 	}
+	
+	public ViewTunesAdapter(Context context, final ParseUser user){
+		super(context, new ParseQueryAdapter.QueryFactory<TuneParse>() {
+
+			@Override
+			public ParseQuery<TuneParse> create() {
+				ParseQuery<TuneParse> query = ParseQuery.getQuery("Tune");
+				query.whereEqualTo("createdBy", user);
+				query.include("createdBy");
+				query.addDescendingOrder("createdAt");
+				return query;
+			}
+		});
+	}
 
 	@Override
 	public View getItemView(TuneParse object, View v, ViewGroup parent) {

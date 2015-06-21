@@ -306,7 +306,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	}
 	
 	private String testText(String text){
-		if(text == null)
+		if(text.equalsIgnoreCase(""))
 			return "Not Entered";
 		else
 			return text;
