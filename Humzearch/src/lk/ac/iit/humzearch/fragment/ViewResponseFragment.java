@@ -1,5 +1,6 @@
 package lk.ac.iit.humzearch.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.parse.ParseQueryAdapter.OnQueryLoadListener;
@@ -63,12 +64,14 @@ public class ViewResponseFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Response r = responseAdapter.getItem(position);
+				SimpleDateFormat f = new SimpleDateFormat("dd MMMM 'at' HH:mm");
 				
 				Intent intent = new Intent(getActivity(), ViewResponseItem.class);
 				intent.putExtra("response_id", r.getObjectId());
 				intent.putExtra("response_name", r.getCreatedBy().getString("name"));
 				intent.putExtra("response_title", r.getTitle());
 				intent.putExtra("response_artist", r.getArtist());
+				intent.putExtra("response_date", f.format(r.getCreatedAt()));
 				startActivity(intent);
 				
 			}

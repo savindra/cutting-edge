@@ -30,7 +30,7 @@
         android:layout_marginTop="10dp" >
 
         <TextView
-            android:id="@+id/txtViewRewardName"
+            android:id="@+id/txtViewTuneItemDelete"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:text="@string/title"
@@ -158,6 +158,15 @@
         android:text="@string/deletepermanently"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#66B2FF" />
+
+    <TextView
+        android:id="@+id/txtViewResponseItemDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtViewResponseName"
+        android:layout_below="@+id/txtViewResponseName"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
 </ScrollView>

@@ -18,7 +18,7 @@
         android:src="@drawable/ic_reward" />
 
     <TextView
-        android:id="@+id/txtViewRewardName"
+        android:id="@+id/txtViewTuneItemDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/imgMyAccountReward"
@@ -32,7 +32,7 @@
         android:id="@+id/txtViewRewardValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtViewRewardName"
+        android:layout_below="@+id/txtViewTuneItemDelete"
         android:layout_marginTop="15dp"
         android:layout_toRightOf="@+id/imgMyAccountReward"
         android:text="TextView"
@@ -43,7 +43,7 @@
         android:layout_width="18dp"
         android:layout_height="54dp"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/txtViewRewardName"
+        android:layout_alignTop="@+id/txtViewTuneItemDelete"
         android:layout_marginRight="10dp"
         android:src="@drawable/ic_right_arrow" />
 

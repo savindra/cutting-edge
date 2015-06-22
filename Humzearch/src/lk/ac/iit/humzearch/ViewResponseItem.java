@@ -47,7 +47,7 @@ public class ViewResponseItem extends ActionBarActivity {
 	private final static String TAG = ViewResponseItem.class.getSimpleName();
 	
 	private Intent intent;
-	private TextView txtName, txtTitle, txtArtist, txtDelete;
+	private TextView txtName, txtDate, txtTitle, txtArtist, txtDelete;
 	private ParseImageView imgUser;
 	private Button btnPlay, btnPause, btnAccept, btnReject;
 	private SeekBar seekBar;
@@ -78,6 +78,7 @@ public class ViewResponseItem extends ActionBarActivity {
 		intent = getIntent();
 		imgUser = (ParseImageView) findViewById(R.id.imgViewResponseItemUser);
 		txtName = (TextView) findViewById(R.id.txtViewResponseName);
+		txtDate = (TextView) findViewById(R.id.txtViewResponseItemDate);
 		txtTitle = (TextView) findViewById(R.id.txtViewResponseItemTitle);
 		txtArtist = (TextView) findViewById(R.id.txtViewResponseItemArtist);
 		txtDelete = (TextView) findViewById(R.id.txtViewResponseDelete);
@@ -135,6 +136,7 @@ public class ViewResponseItem extends ActionBarActivity {
 		progressDialog = ProgressDialog.show(this, "", "Loading...", true);
 		responseObjId = intent.getStringExtra("response_id");
 		txtName.setText(intent.getStringExtra("response_name"));
+		txtDate.setText(intent.getStringExtra("response_date"));
 		txtArtist.setText(intent.getStringExtra("response_artist"));
 		txtTitle.setText(intent.getStringExtra("response_title"));
 		

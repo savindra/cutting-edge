@@ -60,7 +60,7 @@ public class ViewResponseAdapter extends ParseQueryAdapter<Response> {
 		txtMessage.setText(Html.fromHtml(message));
 		
 		SimpleDateFormat f = new SimpleDateFormat("dd MMMM 'at' HH:mm");
-		TextView txtDate = (TextView) v.findViewById(R.id.txtViewResponseItemDate);
+		TextView txtDate = (TextView) v.findViewById(R.id.txtViewResponseDate);
 		txtDate.setText(f.format(object.getCreatedAt()));
 		
 		return v;

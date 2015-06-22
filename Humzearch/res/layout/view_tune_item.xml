@@ -9,7 +9,7 @@
     android:background="@color/background"
     android:orientation="vertical" >
 
-    <com.android.volley.toolbox.NetworkImageView
+    <com.parse.ParseImageView
         android:id="@+id/imgViewTuneItemUser"
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -189,7 +189,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/txtViewRewardName"
+            android:id="@+id/txtViewTuneItemDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="17dp"
@@ -208,6 +208,16 @@
             android:textSize="16sp" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtViewTuneItemDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/txtViewTuneItemName"
+        android:layout_below="@+id/txtViewTuneItemName"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
 </RelativeLayout>
 
 </ScrollView>

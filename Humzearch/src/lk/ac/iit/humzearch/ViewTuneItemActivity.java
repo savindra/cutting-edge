@@ -5,10 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Currency;
+import java.util.List;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.parse.CountCallback;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseACL;
@@ -27,6 +31,7 @@ import lk.ac.iit.humzearch.model.TuneParse;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -34,6 +39,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -47,9 +53,9 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	
 	private final static String TAG = ViewTuneItemActivity.class.getSimpleName();
 	
-	private TextView txtName, txtArtist, txtLanguage, txtCountry, txtYear;
-	private NetworkImageView imgUser;
-	private ImageLoader imageLoader;
+	private TextView txtName, txtDate, txtArtist, txtLanguage, txtCountry, txtYear, txtDelete;
+	private ParseImageView imgUser;
+	private ParseFile imgFile;
 	private Button btnPlay, btnPause, btnAddRespone;
 	private SeekBar seekBar;
 	private MediaPlayer mMediaplayer;
@@ -59,6 +65,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	private ProgressDialog progressDialog;
 	
 	private Dialog responseDialog;
+	private AlertDialog alertDialog;
 	private TextView txtDialogArtist, txtDialogTitle;
 	private Button btnDialogAddResponse;
 	
@@ -71,6 +78,7 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	private Handler timerHandler;
 	
 	private Intent i;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -81,25 +89,35 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		getSupportActionBar().setTitle("View Tune");
 		
 		initialize();
-		fillData();
+		downloadData();
 	}
 	
 
 
 	private void initialize() {
 		txtName = (TextView) findViewById(R.id.txtViewTuneItemName);
+		txtDate = (TextView) findViewById(R.id.txtViewTuneItemDate);
 		txtArtist = (TextView) findViewById(R.id.txtViewTuneItemArtist);
 		txtLanguage = (TextView) findViewById(R.id.txtViewTuneItemLang);
 		txtCountry = (TextView) findViewById(R.id.txtViewTuneItemCountry);
 		txtYear = (TextView) findViewById(R.id.txtViewTuneItemYear);
-		imgUser = (NetworkImageView) findViewById(R.id.imgViewTuneItemUser);
-		imageLoader = AppController.getInstance().getImageLoader();
+		txtDelete = (TextView) findViewById(R.id.txtViewTuneItemDelete);
+		imgUser = (ParseImageView) findViewById(R.id.imgViewTuneItemUser);
 		btnPlay = (Button) findViewById(R.id.btnViewTuneItemPlay);
 		btnPause = (Button) findViewById(R.id.btnViewTuneItemPause);
 		btnAddRespone = (Button) findViewById(R.id.btnViewTuneResponse);
 		seekBar = (SeekBar) findViewById(R.id.seekBarViewTuneItem);
+		mMediaplayer = new MediaPlayer();
 		timerHandler = new Handler();
 		i = getIntent();
+		
+		txtDelete.setVisibility(View.GONE);
+		txtDelete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				delete();
+			}
+		});
 		
 		btnAddRespone.setOnClickListener(new OnClickListener() {
 			@Override
@@ -129,19 +147,18 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 	}
 	
 	// Get tune data from previous activity
-	private void fillData(){
+	private void fillData(TuneParse tuneParse){
 		
-		imgUser.setImageUrl(i.getStringExtra("image"), imageLoader);
-		txtName.setText(i.getStringExtra("name"));
-		txtArtist.setText(testText(i.getStringExtra("tune_artist")));
-		txtLanguage.setText(testText(i.getStringExtra("tune_lang")));
-		txtCountry.setText(testText(i.getStringExtra("tune_country")));
-		txtYear.setText(testText(i.getStringExtra("tune_year")));
+		imgFile = tuneParse.getCreatedBy().getParseFile("image");
+		if(imgFile != null){
+			imgUser.setParseFile(imgFile);
+			imgUser.loadInBackground();
+		}
 		
-		mMediaplayer = new MediaPlayer();
-		mMediaplayer = MediaPlayer.create(this, Uri.parse(i.getStringExtra("tune_url")));
+		mMediaplayer = MediaPlayer.create(this, Uri.parse(tuneParse.getTuneFile().getUrl()));
 		
-		downloadData();
+		if(tuneParse.getCreatedBy().getUsername().equalsIgnoreCase(ParseUser.getCurrentUser().getUsername()))
+			txtDelete.setVisibility(View.VISIBLE);
 	}
 	
 	// Download a copy of tune object from cloud via object id
@@ -149,6 +166,12 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		progressDialog = ProgressDialog.show(this, "", "Loading...", true);
 		
 		tuneObjID = i.getStringExtra("tuneParseID");
+		txtName.setText(i.getStringExtra("name"));
+		txtDate.setText(i.getStringExtra("tune_date"));
+		txtArtist.setText(testText(i.getStringExtra("tune_artist")));
+		txtLanguage.setText(testText(i.getStringExtra("tune_lang")));
+		txtCountry.setText(testText(i.getStringExtra("tune_country")));
+		txtYear.setText(testText(i.getStringExtra("tune_year")));
 		
 		tuneQuery = ParseQuery.getQuery("Tune");
 		tuneQuery.whereEqualTo("objectId", tuneObjID);
@@ -160,11 +183,13 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 				progressDialog.dismiss();
 				if(e == null){
 					tuneParse = tune;
+					fillData(tuneParse);
 				}else{
 					Log.d(TAG, e.getMessage());
 				}
 			}
 		});
+		
 	}
 
 	// Mediaplayer controllers
@@ -288,6 +313,43 @@ public class ViewTuneItemActivity extends ActionBarActivity {
 		push.setQuery(pushQuery);
 		push.setMessage(ParseUser.getCurrentUser().getString("name") + " added a response to your tune.");
 		push.sendInBackground();
+		
+	}
+	
+	public void delete(){
+		
+		
+		alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setMessage("All the responses made to this tune will also be deleted. Do you want to proceed?");
+		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertDialog.dismiss();
+			}
+		});
+		
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				ParseQuery<Response> query = ParseQuery.getQuery("Response");
+				query.whereEqualTo("tune", tuneParse);
+				query.findInBackground(new FindCallback<Response>() {
+					
+					@Override
+					public void done(List<Response> objects, ParseException e) {
+						for(Response r : objects){
+							r.deleteInBackground();
+						}
+						tuneParse.deleteInBackground();
+					}
+				});
+				displayToast(ViewTuneItemActivity.this, "Your tune deleted successfully.");
+				startActivity(new Intent(ViewTuneItemActivity.this, MainMenuActivity.class));
+			}
+		});
+		alertDialog.show();
 		
 	}
 	

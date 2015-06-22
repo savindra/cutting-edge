@@ -46,7 +46,7 @@ public class ViewRewardAdapter extends ParseQueryAdapter<Reward> {
 		String imgUrl = object.getParseFile("image").getUrl();
 		imgReward.setImageUrl(imgUrl, imageLoader);
 		
-		TextView txtName = (TextView) v.findViewById(R.id.txtViewRewardName);
+		TextView txtName = (TextView) v.findViewById(R.id.txtViewTuneItemDelete);
 		txtName.setText(object.getString("name"));
 		
 		TextView txtValue = (TextView) v.findViewById(R.id.txtViewRewardValue);

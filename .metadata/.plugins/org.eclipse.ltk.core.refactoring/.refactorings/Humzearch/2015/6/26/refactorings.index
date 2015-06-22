@@ -16,3 +16,5 @@
 1434973275935	Rename field 'txtAddressSettingsCity'
 1434990751208	Extracts string 'null' into R.string.noresults
 1434990772413	Rename field 'textView1'
+1434996133987	Rename field 'txtViewRewardName'
+1435001217190	Rename field 'txtViewResponseItemDate'
