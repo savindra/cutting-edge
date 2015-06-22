@@ -1,0 +1,40 @@
+package lk.ac.iit.humzearch;
+
+import com.parse.ParseUser;
+
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+public class SettingsAddressActivity extends ActionBarActivity {
+	
+	private TextView txtAddress1, txtAddress2, txtCity, txtPostcode;
+	private Spinner spinCountry;
+	private Button btnAddEdit;
+	
+	private ParseUser user;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.settings_address);
+		
+		initialize();
+	}
+
+	private void initialize() {
+		txtAddress1 = (TextView) findViewById(R.id.txtSettingsAddress1);
+		txtAddress2 = (TextView) findViewById(R.id.txtSettingsAddress2);
+		txtCity = (TextView) findViewById(R.id.txtSettingsAddressSCity);
+		txtPostcode = (TextView) findViewById(R.id.txtSettingsAddressPostcode);
+		spinCountry = (Spinner) findViewById(R.id.spinnerSettingsAddressCountry);
+		user = ParseUser.getCurrentUser();
+		btnAddEdit = (Button) findViewById(R.id.btnSettingsAddressAddEdit);
+		
+	}
+	
+	
+
+}

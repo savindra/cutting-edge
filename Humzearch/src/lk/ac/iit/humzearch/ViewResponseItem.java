@@ -5,9 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import lk.ac.iit.humzearch.app.AppController;
 import lk.ac.iit.humzearch.model.Response;
 import lk.ac.iit.humzearch.model.UserData;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -56,13 +59,9 @@ public class ViewResponseItem extends ActionBarActivity {
 	
 	private ParseUser currentUser;
 	private ParseQuery<Response> responseQuery;
-	private ParseFile imgFile, tuneFile;
-	private File mediaFile;
+	private ParseFile imgFile;
 	private Response response;
 	private String responseObjId;
-	private String status;
-	private boolean isConfirmed;
-	
 	private ProgressDialog progressDialog;
 	private AlertDialog alertDialog;
 
@@ -71,6 +70,7 @@ public class ViewResponseItem extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.view_response_item);
 		initialize();
+		downloadData();
 	}
 
 	private void initialize() {
@@ -86,6 +86,7 @@ public class ViewResponseItem extends ActionBarActivity {
 		btnAccept = (Button) findViewById(R.id.btnViewResponseAccept);
 		btnReject = (Button) findViewById(R.id.btnViewResponseReject);
 		seekBar = (SeekBar) findViewById(R.id.seekBarViewResponse);
+		mMediaplayer = new MediaPlayer();
 		
 		timerHandler = new Handler();
 		
@@ -127,7 +128,75 @@ public class ViewResponseItem extends ActionBarActivity {
 			}
 		});
 		
-		downloadData();
+	}
+	
+	private void downloadData() {
+		
+		progressDialog = ProgressDialog.show(this, "", "Loading...", true);
+		responseObjId = intent.getStringExtra("response_id");
+		txtName.setText(intent.getStringExtra("response_name"));
+		txtArtist.setText(intent.getStringExtra("response_artist"));
+		txtTitle.setText(intent.getStringExtra("response_title"));
+		
+		responseQuery = ParseQuery.getQuery("Response");
+		responseQuery.whereEqualTo("objectId", responseObjId);
+		responseQuery.include("createdBy");
+		responseQuery.include("tune");
+		responseQuery.getFirstInBackground(new GetCallback<Response>() {
+			
+			@Override
+			public void done(Response object, ParseException e) {
+				if(e == null){
+					response = object;
+					fillData(response);
+				}else{
+					progressDialog.dismiss();
+					Log.d(TAG, e.getMessage());
+				}
+				
+			}
+		});
+	}
+	
+	private void fillData(Response response) {
+		imgFile = response.getCreatedBy().getParseFile("image");
+		if(imgFile != null){
+			imgUser.setParseFile(imgFile);
+			imgUser.loadInBackground();
+		}
+		progressDialog.dismiss();
+		mMediaplayer = MediaPlayer.create(this, Uri.parse(response.getParseObject("tune").getParseFile("tune").getUrl()));
+		
+		if(response.getParseUser("createdBy").getUsername().equalsIgnoreCase(currentUser.getUsername())){
+			txtDelete.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	private void getConfirmation(final String status){
+		alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setMessage("Are you sure you want to " + status + " this response?");
+		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				alertDialog.dismiss();
+			}
+		});
+		
+		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				progressDialog = ProgressDialog.show(ViewResponseItem.this, "", "Loading...", true);
+				if(status.equalsIgnoreCase("accept"))
+					getCurrentStatus("accept");
+				else{
+					getCurrentStatus("reject");
+				}
+				alertDialog.dismiss();
+			}
+		});
+		alertDialog.show();
 	}
 	
 	public void getCurrentStatus(final String action){
@@ -143,9 +212,11 @@ public class ViewResponseItem extends ActionBarActivity {
 						else
 							reject();
 					}else{
-						displayToast("This response is already " + object.getStatus() + ".");
+						progressDialog.dismiss();
+						displayToast("Error! This response is already " + object.getStatus() + ".");
 					}
 				}else{
+					progressDialog.dismiss();
 					Log.d(TAG, e.getMessage());
 				}
 			}
@@ -176,6 +247,7 @@ public class ViewResponseItem extends ActionBarActivity {
 					}
 					
 				}else{
+					progressDialog.dismiss();
 					Log.d(TAG, e.getMessage());
 					displayToast(e.getMessage());
 				}
@@ -195,6 +267,7 @@ public class ViewResponseItem extends ActionBarActivity {
 				if(e == null){
 					object.increment("points", 10);
 					object.saveEventually();
+					progressDialog.dismiss();
 					displayToast("This response accepted successfully.");
 					sendPushNotification();
 				}else{
@@ -230,6 +303,7 @@ public class ViewResponseItem extends ActionBarActivity {
 						
 						@Override
 						public void done(ParseException e) {
+							progressDialog.dismiss();
 							if(e == null){
 								displayToast("Response rejected successfully.");
 							}else{
@@ -240,6 +314,7 @@ public class ViewResponseItem extends ActionBarActivity {
 					});
 					
 				}else{
+					progressDialog.dismiss();
 					Log.d(TAG, e.getMessage());
 					displayToast(e.getMessage());
 				}
@@ -249,34 +324,9 @@ public class ViewResponseItem extends ActionBarActivity {
 		
 	}
 	
-	private void getConfirmation(final String status){
-		alertDialog = new AlertDialog.Builder(this).create();
-		alertDialog.setMessage("Are you sure you want to " + status + " this response?");
-		alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				alertDialog.dismiss();
-			}
-		});
-		
-		alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				isConfirmed = true;
-				if(status.equalsIgnoreCase("accept"))
-					getCurrentStatus("accept");
-				else{
-					getCurrentStatus("reject");
-				}
-				alertDialog.dismiss();
-			}
-		});
-		alertDialog.show();
-	}
 	
 	
+	// Mediaplayer controllers
 	private void play() {
 		isPlaying = true;
 		seekBar.setMax((int) mMediaplayer.getDuration());
@@ -291,7 +341,6 @@ public class ViewResponseItem extends ActionBarActivity {
 		isPlaying = false;
 	}
 	
-	
 	private Runnable updateSeekBarTime = new Runnable() {
 		@Override
 		public void run() {
@@ -303,112 +352,7 @@ public class ViewResponseItem extends ActionBarActivity {
 			}
 		}
 	};
-
-	private void downloadData() {
-		progressDialog = ProgressDialog.show(this, "", "Loading...", true);
-		
-		responseObjId = intent.getStringExtra("response_id");
-		txtName.setText(intent.getStringExtra("response_name"));
-		txtTitle.setText(intent.getStringExtra("response_title"));
-		txtArtist.setText(intent.getStringExtra("response_artist"));
-		
-		responseQuery = ParseQuery.getQuery("Response");
-		responseQuery.whereEqualTo("objectId", responseObjId);
-		responseQuery.include("createdBy");
-		responseQuery.include("tune");
-		responseQuery.getFirstInBackground(new GetCallback<Response>() {
-			
-			@Override
-			public void done(Response object, ParseException e) {
-				if(e == null){
-					response = object;
-					fillData(response);
-				}else{
-					progressDialog.dismiss();
-					Log.d(TAG, e.getMessage());
-				}
-				
-			}
-		});
-		
-		
-	}
-	
-	private void fillData(Response response) {
-		
-		imgFile = response.getCreatedBy().getParseFile("image");
-		if(imgFile != null){
-			imgUser.setParseFile(imgFile);
-			imgUser.loadInBackground();
-		}
-		
-		tuneFile = response.getParseObject("tune").getParseFile("tune");
-		tuneFile.getDataInBackground(new GetDataCallback() {
-			
-			@Override
-			public void done(byte[] data, ParseException e) {
-				progressDialog.dismiss();
-				if(e == null){
-					byteToFile(data);
-					initializeMediaplayer();
-				}else{
-					Log.d(TAG, e.getMessage());
-				}
-				
-				
-			}
-		});
-		
-		if(response.getParseUser("createdBy").getUsername().equalsIgnoreCase(currentUser.getUsername())){
-			txtDelete.setVisibility(View.VISIBLE);
-		}
-	}
-	
-	private void initializeMediaplayer(){
-		mMediaplayer = new MediaPlayer();
-		mMediaplayer = MediaPlayer.create(this, Uri.fromFile(mediaFile));
-	}
-	
-	private void byteToFile(byte[] data){
-		mediaFile = new File(getOutputMediaFileUri());
-		
-		try {
-			FileOutputStream fileOuputStream =  new FileOutputStream(mediaFile);
-			fileOuputStream.write(data);
-			fileOuputStream.close();
-			
-		} catch (Exception e) {
-			Log.d(TAG, e.getMessage());
-		}
-	}
-	
-	public String getOutputMediaFileUri() {
-        return (getOutputMediaFile()).getAbsolutePath();
-    }
-	
-	private static File getOutputMediaFile(){
-		File mediaStorageDir = new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), "/humzearch");
-		
-		// Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d(TAG, "Oops! Failed create "
-                        + "humzearch" + " directory");
-                return null;
-            }
-        }
-        
-        File mediaFile;
-        mediaFile = new File(mediaStorageDir + File.separator + "audio-temp.mp3");
-        try {
-			mediaFile.createNewFile();
-			Log.d(TAG, "file created.");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-        return mediaFile;
-	}
+	// Mediaplayer Controllers
 	
 	public void displayToast(String message){
 		if(!message.equalsIgnoreCase(""))

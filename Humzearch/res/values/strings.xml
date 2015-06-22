@@ -322,5 +322,12 @@
 	    <string name="pointsbalance">Points Balance</string>
 	    <string name="address">Address</string>
 	    <string name="datejoined">Date Joined</string>
+	    <string name="changeimage">CHANGE IMAGE</string>
+	    <string name="addressline1">Address Line 1</string>
+	    <string name="addressline2">Address Line 2</string>
+	    <string name="city">City</string>
+	    <string name="postcode">Postcode</string>
+	    <string name="addedit">ADD/EDIT</string>
+	    <string name="noresults">No Results</string>
 
 </resources>

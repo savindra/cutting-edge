@@ -1,0 +1,39 @@
+package lk.ac.iit.humzearch.adapter;
+
+import lk.ac.iit.humzearch.R;
+import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class SettingsAdapter extends ArrayAdapter<String> {
+	
+	private final Activity context;
+	private final String[] itemName;
+	private final Integer[] imgId;
+	
+	public SettingsAdapter(Activity context, String[] itemName, Integer[] imgId) {
+		super(context, R.layout.settings_row, itemName);
+		this.context=context;
+		this.itemName=itemName;
+		this.imgId=imgId;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		LayoutInflater inflater = context.getLayoutInflater();
+		View rootView = inflater.inflate(R.layout.settings_row, null, true);
+		
+		TextView txtName = (TextView) rootView.findViewById(R.id.txtSettingRowName);
+		ImageView img = (ImageView) rootView.findViewById(R.id.imgSettingsRow);
+		
+		txtName.setText(itemName[position]);
+		img.setImageResource(imgId[position]);
+		
+		return rootView;
+	}
+	
+}

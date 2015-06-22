@@ -73,6 +73,24 @@
             android:theme="@style/AppTheme.BackButton">
         </activity>
         
+        <activity android:name="lk.ac.iit.humzearch.SettingsActivity"
+            android:label="Settings"
+            android:parentActivityName="lk.ac.iit.humzearch.MainMenuActivity"
+            android:theme="@style/AppTheme.BackButton">
+        </activity>
+        
+        <activity android:name="lk.ac.iit.humzearch.SettingsProfileActivity"
+            android:label="Profile"
+            android:parentActivityName="lk.ac.iit.humzearch.SettingsActivity"
+            android:theme="@style/AppTheme.BackButton">
+        </activity>
+        
+        <activity android:name="lk.ac.iit.humzearch.SettingsAddressActivity"
+            android:label="Address"
+            android:parentActivityName="lk.ac.iit.humzearch.SettingsActivity"
+            android:theme="@style/AppTheme.BackButton">
+        </activity>
+        
         <!-- Parse push notification -->
         
         <service android:name="com.parse.PushService" 

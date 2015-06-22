@@ -1,1 +1,18 @@
 1434869900267	Rename field 'txtTuneResultCountry'
+1434957545211	Rename type 'SettingsAdatper'
+1434958805812	Rename field 'imageView1'
+1434958827770	Extracts string 'null' into R.string.changeimage
+1434971811240	Extracts string 'null' into R.string.addressline1
+1434971849980	Extracts string 'null' into R.string.addressline2
+1434971908156	Extracts string 'null' into R.string.city
+1434971963575	Extracts string 'null' into R.string.postcode
+1434972137279	Extracts string 'null' into R.string.addedit
+1434972240314	Rename field 'editText1'
+1434972252628	Rename field 'editText2'
+1434972268446	Rename field 'editText3'
+1434972286911	Rename field 'editText4'
+1434972317712	Rename field 'spinner1'
+1434972918307	Rename field 'button1'
+1434973275935	Rename field 'txtAddressSettingsCity'
+1434990751208	Extracts string 'null' into R.string.noresults
+1434990772413	Rename field 'textView1'

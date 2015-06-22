@@ -1,7 +1,0 @@
-package lk.ac.iit.humzearch.fragment;
-
-import android.app.Fragment;
-
-public class ViewResponseFragment extends Fragment {
-
-}

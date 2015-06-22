@@ -1,0 +1,41 @@
+package lk.ac.iit.humzearch;
+
+import lk.ac.iit.humzearch.app.AppController;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.parse.ParseUser;
+
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.widget.Button;
+
+public class SettingsProfileActivity extends ActionBarActivity {
+	
+	private NetworkImageView imgUser;
+	private ImageLoader imageLoader;
+	private Button btnChange;
+	private ParseUser currentUser;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		initialize();
+	}
+
+	private void initialize() {
+		currentUser = ParseUser.getCurrentUser();
+		
+		imgUser = (NetworkImageView) findViewById(R.id.imgSettingsProfile);
+		imageLoader = AppController.getInstance().getImageLoader();
+		imgUser.setImageUrl(currentUser.getParseFile("image").getUrl(), imageLoader);
+		
+		btnChange = (Button) findViewById(R.id.btnSettingsProfileChange);
+		
+		
+	}
+	
+	
+
+}

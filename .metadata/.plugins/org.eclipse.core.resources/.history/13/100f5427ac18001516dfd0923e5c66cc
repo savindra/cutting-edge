@@ -1,0 +1,21 @@
+package lk.ac.iit.humzearch.adapter;
+
+import lk.ac.iit.humzearch.R;
+import android.app.Activity;
+import android.content.Context;
+import android.widget.ArrayAdapter;
+
+public class SettingsAdatper extends ArrayAdapter<String> {
+	
+	private final Activity context;
+	private final String[] itemName;
+	private final Integer[] imgId;
+	
+	public SettingsAdatper(Activity context, String[] itemName, Integer[] imgId) {
+		super(context, R.layout.settings_row, itemName);
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+
+}
