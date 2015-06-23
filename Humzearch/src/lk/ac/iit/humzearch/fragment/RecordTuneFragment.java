@@ -66,8 +66,10 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 		seekBar = (SeekBar) rootView.findViewById(R.id.recordTuneSeekBar);
 		btnSearch = (LinearLayout) rootView.findViewById(R.id.btnRecordTuneSearch);
 		
+		seekBar.setClickable(false);
 		btnPlay.setEnabled(false);
 		btnStop.setEnabled(false);
+		btnSearch.setEnabled(false);
 		
 		btnPlay.setOnClickListener(new OnClickListener() {
 			
@@ -135,7 +137,7 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 			if(isPlaying){
 				timeElapsed = mMediaPlayer.getCurrentPosition();
 				seekBar.setProgress((int) timeElapsed);
-				int timeRemaining = (int) (timeElapsed / 1000) + 1;
+				int timeRemaining = (int) (timeElapsed / 1000);
 				txtTimer.setText("00:" + String.format("%02d",timeRemaining));
 				timerHandler.postDelayed(this, 100);
 			}
@@ -146,6 +148,9 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 	@Override
 	public void onRecordStart() {
 		Log.d(TAG, "onRecordStart");
+		btnPlay.setEnabled(false);
+		btnStop.setEnabled(false);
+		btnSearch.setEnabled(false);
         try {
         	outputFile = getOutputMediaFileUri();
         	startTime = SystemClock.uptimeMillis();
@@ -200,9 +205,9 @@ public class RecordTuneFragment extends Fragment implements VoiceView.OnRecordLi
 			mMediaRecorder.release();
 			mMediaRecorder = null;
 		}
-		seekBar.setClickable(false);
 		btnPlay.setEnabled(true);
 		btnStop.setEnabled(true);
+		btnSearch.setEnabled(true);
 		
 	}
 	

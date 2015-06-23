@@ -68,7 +68,7 @@ public class MyAccountFragment extends Fragment {
 				if(e == null){
 					if(object.getAddress1() != null || object.getAddress2() != null){
 						txtAddress.setText(object.getAddress1() + "\n" + object.getAddress2() + "\n" + object.getCity()
-							+ "\n" + object.getCountry());
+							+ ", " + object.getPostCode() + "\n" + object.getCountry());
 					}else{
 						txtAddress.setText("Address not entered.");
 					}

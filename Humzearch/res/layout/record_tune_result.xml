@@ -36,41 +36,46 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
             android:layout_weight="0.80"
-            android:gravity="center"
+            android:layout_gravity="center_horizontal"
             android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/txtTuneResultName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold"
-                android:textSize="@dimen/large"/>
+                android:textSize="@dimen/large"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/txtTuneResultArtist"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="@dimen/medium" />
 
             <TextView
                 android:id="@+id/txtTuneResultAlbum"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textSize="@dimen/medium" />
 
             <TextView
                 android:id="@+id/txtTuneResultYear"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="Small Text"
-                android:textAppearance="?android:attr/textAppearanceSmall" 
-                android:textSize="@dimen/medium"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textSize="@dimen/medium" />
+
         </LinearLayout>
     </LinearLayout>
 

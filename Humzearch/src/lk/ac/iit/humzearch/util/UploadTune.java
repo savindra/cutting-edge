@@ -82,7 +82,7 @@ public class UploadTune extends AsyncTask<Void, Integer, String> {
 	public UploadTune(Context context, String tuneFile) {
 		super();
 		this.context = context;
-		this.tuneFile = "/storage/emulated/0/Download/test.mp3";
+		this.tuneFile = tuneFile;
 		tune = new Tune();
 	}
 
